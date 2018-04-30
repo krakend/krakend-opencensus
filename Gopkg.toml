@@ -1,0 +1,16 @@
+[[constraint]]
+  name = "github.com/devopsfaith/krakend"
+  version = "0.4.2"
+
+[[constraint]]
+  name = "github.com/gin-gonic/gin"
+  version = "1.2.0"
+
+[[constraint]]
+  name = "go.opencensus.io"
+  version = "0.8.0"
+
+[prune]
+  non-go = true
+  go-tests = true
+  unused-packages = true
