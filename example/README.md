@@ -12,6 +12,19 @@ Example
 	$ brew install prometheus
 	$ prometheus
 
+### Jaeger server
+
+	$ docker run -d -e \
+	  COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+	  -p 5775:5775/udp \
+	  -p 6831:6831/udp \
+	  -p 6832:6832/udp \
+	  -p 5778:5778 \
+	  -p 16686:16686 \
+	  -p 14268:14268 \
+	  -p 9412:9411 \
+	  jaegertracing/all-in-one:latest
+
 ## Build and Run
 
 	$ go build
@@ -19,6 +32,10 @@ Example
 
 
 
-Exposed traces: http://192.168.99.100:9411/zipkin/
+Exposed traces: 
+
++ zipkin http://192.168.99.100:9411/zipkin/
++ jaeger http://192.168.99.100:16686/search
+
 
 Exposed metrics: http://127.0.0.1:9090/

@@ -2,7 +2,6 @@ package opencensus
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
@@ -24,7 +23,6 @@ func Middleware(name string) proxy.Middleware {
 
 			if err != nil {
 				if err.Error() != "context canceled" {
-					fmt.Println("error detected in the middleware:", err.Error())
 					span.AddAttributes(trace.BoolAttribute("error", true))
 				} else {
 					span.AddAttributes(trace.BoolAttribute("canceled", true))

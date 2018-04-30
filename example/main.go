@@ -19,6 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/openzipkin/zipkin-go/model"
 	httpreporter "github.com/openzipkin/zipkin-go/reporter/http"
+	"go.opencensus.io/exporter/jaeger"
 	"go.opencensus.io/exporter/prometheus"
 	"go.opencensus.io/exporter/zipkin"
 	"go.opencensus.io/stats/view"
@@ -34,7 +35,8 @@ func main() {
 	logLevel := flag.String("l", "ERROR", "Logging level")
 	debug := flag.Bool("d", false, "Enable the debug")
 	configFile := flag.String("c", "/etc/krakend/configuration.json", "Path to the configuration filename")
-	zipkinURL := flag.String("zipkin", "http://192.168.99.100:9411/api/v2/spans", "url of the zipkin reposrting endpoint")
+	zipkinURL := flag.String("zipkin", "http://192.168.99.100:9411/api/v2/spans", "url of the zipkin endpoint")
+	jaegerURL := flag.String("jaeger", "http://192.168.99.100:14268", "url of the jaeger thrift endpoint")
 	serviceName := flag.String("name", "krakend", "name of the service")
 	flag.Parse()
 
@@ -77,10 +79,17 @@ func main() {
 			IPv4:        net.ParseIP("127.0.0.1"),
 			Port:        uint16(serviceConfig.Port),
 		})
+	jaegerExporter, err := jaeger.NewExporter(jaeger.Options{
+		Endpoint:    *jaegerURL,
+		ServiceName: *serviceName,
+	})
+	if err != nil {
+		log.Fatal("creating the jaeger exporter:", err.Error())
+	}
 
 	opencensusCfg := opencensus.Config{
 		ViewExporters:   []view.Exporter{exporter},
-		TraceExporters:  []trace.Exporter{zipkinExporter},
+		TraceExporters:  []trace.Exporter{zipkinExporter, jaegerExporter},
 		ReportingPeriod: time.Second,
 		SampleRate:      100,
 		Views:           opencensus.DefaultViews,

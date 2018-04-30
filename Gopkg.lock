@@ -3,6 +3,13 @@
 
 [[projects]]
   branch = "master"
+  name = "git.apache.org/thrift.git"
+  packages = ["lib/go/thrift"]
+  revision = "0293c3643b0075b510b9d92b2cc39b6d5e0fadb8"
+  source = "github.com/apache/thrift"
+
+[[projects]]
+  branch = "master"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
@@ -110,8 +117,11 @@
   version = "v1.1.1"
 
 [[projects]]
+  branch = "master"
   name = "go.opencensus.io"
   packages = [
+    "exporter/jaeger",
+    "exporter/jaeger/internal/gen-go/jaeger",
     "exporter/prometheus",
     "exporter/zipkin",
     "internal",
@@ -126,14 +136,31 @@
     "trace/internal",
     "trace/propagation"
   ]
-  revision = "0095aec66ae14801c6711210f6f0716411cefdd3"
-  version = "v0.8.0"
+  revision = "10cec2c05ea2cfb8b0d856711daedc49d8a45c56"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "5f9ae10d9af5b1c89ae6904293b14b064d4ada23"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sync"
+  packages = ["semaphore"]
+  revision = "1d60e4601c6fd243af51cc01ddf169918a5407ca"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "2f57af4873d00d535c5c9028850aa2152e6a5566"
+  revision = "4adea008a5e5f820b6028611ae0b6b3fbcec534b"
+
+[[projects]]
+  branch = "master"
+  name = "google.golang.org/api"
+  packages = ["support/bundler"]
+  revision = "2b26f0d5dbe6eea8c0924349bb024673f8105fd9"
 
 [[projects]]
   name = "gopkg.in/go-playground/validator.v8"
@@ -150,6 +177,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b60f4b36847dd264c0bbc7179b18262a2c31b40c89671662aa3cb5017e2ff293"
+  inputs-digest = "24aab6982880636eca39dfeb4d51d96f4cfb539ac0f15550ef116394a1140836"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,0 +1,53 @@
+{
+    "version": 2,
+    "name": "My lovely gateway",
+    "port": 8080,
+    "cache_ttl": "3600s",
+    "timeout": "2500ms",
+    "host": [ "http://127.0.0.1:8082/" ],
+    "endpoints": [
+        {
+            "endpoint": "/fake/{something}",
+            "method": "GET",
+            "concurrent_calls": 3,
+            "backend": [
+                {
+                    "url_pattern": "/__debug/{something}",
+                    "mapping": {
+                        "message": "backend1"
+                    }
+                },
+                {
+                    "url_pattern": "/__debug/{something}/{something}",
+                    "mapping": {
+                        "message": "backend2"
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/combination/{id}",
+            "backend": [
+                {
+                    "host": [
+                        "https://jsonplaceholder.typicode.com"
+                    ],
+                    "url_pattern": "/posts?userId={id}",
+                    "is_collection": true,
+                    "mapping": {
+                        "collection": "posts"
+                    }
+                },
+                {
+                    "host": [
+                        "https://jsonplaceholder.typicode.com"
+                    ],
+                    "url_pattern": "/users/{id}",
+                    "mapping": {
+                        "email": "personal_email"
+                    }
+                }
+            ]
+        }
+    ]
+}

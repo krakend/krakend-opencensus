@@ -1,0 +1,32 @@
+{
+    "version": 2,
+    "name": "My lovely gateway",
+    "port": 8080,
+    "cache_ttl": "3600s",
+    "timeout": "2500ms",
+    "host": [ "http://127.0.0.1:8082/" ],
+    "endpoints": [
+        {
+            "endpoint": "/fake/{something}",
+            "concurrent_calls": 3,
+            "backend": [
+                {
+                    "url_pattern": "/fake/{something}"
+                }
+            ]
+        },
+        {
+            "endpoint": "/combination/{id}",
+            "backend": [
+                {
+                    "url_pattern": "/combination/{id}",
+                    "group": "backend1"
+                },
+                {
+                    "url_pattern": "/combination/{id}",
+                    "group": "backend2"
+                }
+            ]
+        }
+    ]
+}
