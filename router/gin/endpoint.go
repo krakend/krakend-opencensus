@@ -33,6 +33,9 @@ func HandlerFunc(cfg *config.EndpointConfig, next gin.HandlerFunc, prop propagat
 		name:        cfg.Endpoint,
 		propagation: prop,
 		Handler:     next,
+		StartOptions: trace.StartOptions{
+			SpanKind: trace.SpanKindServer,
+		},
 	}
 	return h.HandlerFunc
 }
@@ -58,19 +61,13 @@ func (h *handler) HandlerFunc(c *gin.Context) {
 }
 
 func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Request, func()) {
-	opts := trace.StartOptions{
-		// Sampler:  h.StartOptions.Sampler,
-		Sampler:  trace.AlwaysSample(),
-		SpanKind: trace.SpanKindServer,
-	}
-
 	ctx := r.Context()
 	var span *trace.Span
 	sc, ok := h.extractSpanContext(r)
 	if ok && !h.IsPublicEndpoint {
-		span = trace.NewSpanWithRemoteParent(h.name, sc, opts)
+		span = trace.NewSpanWithRemoteParent(h.name, sc, h.StartOptions)
 	} else {
-		span = trace.NewSpan(h.name, nil, opts)
+		span = trace.NewSpan(h.name, nil, h.StartOptions)
 		if ok {
 			span.AddLink(trace.Link{
 				TraceID:    sc.TraceID,

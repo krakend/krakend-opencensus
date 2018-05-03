@@ -28,7 +28,9 @@ Example
 ## Build and Run
 
 	$ go build
-	$ ./example -l DEBUG -d -p 8080 -c krakend.json -name service_name -s 9091
+	$ gcvis ./example -l DEBUG -d -p 8080 -c krakend.json -name gateway0 -s 9091
+	$ gcvis ./example -l DEBUG -d -p 8081 -c krakend_2.json -name gateway1 -s 9092
+	$ gcvis ./example -l DEBUG -d -p 8082 -c krakend_3.json -name gateway2 -s 9093
 
 
 

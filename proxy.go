@@ -8,6 +8,8 @@ import (
 	"go.opencensus.io/trace"
 )
 
+const errCtxCanceledMsg = "context canceled"
+
 func Middleware(name string) proxy.Middleware {
 	return func(next ...proxy.Proxy) proxy.Proxy {
 		if len(next) > 1 {
@@ -22,8 +24,8 @@ func Middleware(name string) proxy.Middleware {
 			resp, err := next[0](trace.WithSpan(ctx, span), req)
 
 			if err != nil {
-				if err.Error() != "context canceled" {
-					span.AddAttributes(trace.BoolAttribute("error", true))
+				if err.Error() != errCtxCanceledMsg {
+					span.AddAttributes(trace.StringAttribute("error", err.Error()))
 				} else {
 					span.AddAttributes(trace.BoolAttribute("canceled", true))
 				}

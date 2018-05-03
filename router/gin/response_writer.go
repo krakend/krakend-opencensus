@@ -2,6 +2,7 @@ package gin
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"sync"
 	"time"
@@ -32,7 +33,11 @@ func (t *trackingResponseWriter) end() {
 		if t.reqSize >= 0 {
 			m = append(m, ochttp.ServerRequestBytes.M(t.reqSize))
 		}
-		ctx, _ := tag.New(t.ctx, tag.Upsert(ochttp.StatusCode, strconv.Itoa(t.Status())))
+		status := t.Status()
+		if status == 0 {
+			status = http.StatusOK
+		}
+		ctx, _ := tag.New(t.ctx, tag.Upsert(ochttp.StatusCode, strconv.Itoa(status)))
 		stats.Record(ctx, m...)
 	})
 }

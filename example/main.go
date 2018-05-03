@@ -3,29 +3,23 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
-	"net"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/logging"
 	"github.com/devopsfaith/krakend/proxy"
 	krakendgin "github.com/devopsfaith/krakend/router/gin"
 	"github.com/gin-gonic/gin"
-	"github.com/openzipkin/zipkin-go/model"
-	httpreporter "github.com/openzipkin/zipkin-go/reporter/http"
-	"go.opencensus.io/exporter/jaeger"
-	"go.opencensus.io/exporter/prometheus"
-	"go.opencensus.io/exporter/zipkin"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 
 	"github.com/devopsfaith/krakend-opencensus"
+	"github.com/devopsfaith/krakend-opencensus/exporter/jaeger"
+	"github.com/devopsfaith/krakend-opencensus/exporter/prometheus"
+	"github.com/devopsfaith/krakend-opencensus/exporter/zipkin"
 	opencensusgin "github.com/devopsfaith/krakend-opencensus/router/gin"
 )
 
@@ -67,35 +61,21 @@ func main() {
 	logger, _ := logging.NewLogger(*logLevel, os.Stdout, "[KRAKEND]")
 
 	// Register stats and trace exporters to export the collected data.
-	exporter, err := prometheusExporter(*prometheusPort)
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
+	{
+		exporter, err := prometheus.Exporter(ctx, *prometheusPort)
+		if err != nil {
+			logger.Fatal("creating the prometheus exporter:", err.Error())
+		}
 
-	zipkinExporter := zipkin.NewExporter(
-		httpreporter.NewReporter(*zipkinURL),
-		&model.Endpoint{
-			ServiceName: *serviceName,
-			IPv4:        net.ParseIP("127.0.0.1"),
-			Port:        uint16(serviceConfig.Port),
-		})
-	jaegerExporter, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint:    *jaegerURL,
-		ServiceName: *serviceName,
-	})
-	if err != nil {
-		log.Fatal("creating the jaeger exporter:", err.Error())
-	}
+		zipkinExporter := zipkin.Exporter(*zipkinURL, *serviceName, "127.0.0.1", serviceConfig.Port)
+		jaegerExporter, err := jaeger.Exporter(*jaegerURL, *serviceName)
+		if err != nil {
+			log.Fatal("creating the jaeger exporter:", err.Error())
+		}
 
-	opencensusCfg := opencensus.Config{
-		ViewExporters:   []view.Exporter{exporter},
-		TraceExporters:  []trace.Exporter{zipkinExporter, jaegerExporter},
-		ReportingPeriod: time.Second,
-		SampleRate:      100,
-		Views:           opencensus.DefaultViews,
-	}
-	if err := opencensus.Register(opencensusCfg); err != nil {
-		log.Fatal(err)
+		if err := opencensus.Register(serviceConfig, []view.Exporter{exporter}, []trace.Exporter{zipkinExporter, jaegerExporter}, []*view.View{}); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	bf := func(cfg *config.Backend) proxy.Proxy {
@@ -113,17 +93,4 @@ func main() {
 
 	// start the engine
 	routerFactory.NewWithContext(ctx).Run(serviceConfig)
-}
-
-func prometheusExporter(port int) (view.Exporter, error) {
-	exporter, err := prometheus.NewExporter(prometheus.Options{})
-	if err != nil {
-		return exporter, err
-	}
-	go func() {
-		router := http.NewServeMux()
-		router.Handle("/metrics", exporter)
-		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), router))
-	}()
-	return exporter, nil
 }
