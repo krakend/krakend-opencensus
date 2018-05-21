@@ -32,7 +32,29 @@
     "extra_config": {
         "github_com/devopsfaith/krakend-opencensus": {
             "sample_rate": 100,
-            "reporting_period": 1
+            "reporting_period": 1,
+            "exporters": {
+                "influxdb": {
+                    "address": "http://192.168.99.100:8086",
+                    "db": "krakend",
+                    "timeout": "1s"
+                },
+                "zipkin": {
+                    "collectorURL": "http://192.168.99.100:9411/api/v2/spans",
+                    "serviceName": "krakend"
+                },
+                "prometheus": {
+                    "port": 9091
+                },
+                "jaeger": {
+                    "endpoint": "http://192.168.99.100:14268",
+                    "serviceName":"krakend"
+                },
+                "logger": {
+                    "stats": true,
+                    "spans": true
+                }
+            }
         }
     }
 }

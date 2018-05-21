@@ -25,6 +25,13 @@ Example
 	  -p 9412:9411 \
 	  jaegertracing/all-in-one:latest
 
+## Influxd server
+
+	$ docker run -p 8086:8086 \
+	  -e INFLUXDB_DB=krakend \
+	  -d --name=influx \
+	  influxdb
+
 ## Build and Run
 
 	$ go build
