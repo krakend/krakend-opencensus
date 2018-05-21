@@ -1,13 +1,35 @@
 package jaeger
 
 import (
+	"context"
+
+	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"go.opencensus.io/exporter/jaeger"
-	"go.opencensus.io/trace"
 )
 
-func Exporter(endpoint, serviceName string) (trace.Exporter, error) {
-	return jaeger.NewExporter(jaeger.Options{
-		Endpoint:    endpoint,
-		ServiceName: serviceName,
+func init() {
+	opencensus.RegisterExporterFactories(func(ctx context.Context, cfg opencensus.Config) (interface{}, error) {
+		return Exporter(ctx, cfg)
 	})
+}
+
+func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, error) {
+	if cfg.Exporters.Jaeger == nil {
+		return nil, nil
+	}
+	e, err := jaeger.NewExporter(jaeger.Options{
+		Endpoint:    cfg.Exporters.Jaeger.Endpoint,
+		ServiceName: cfg.Exporters.Jaeger.ServiceName,
+	})
+	if err != nil {
+		return e, err
+	}
+
+	go func() {
+		<-ctx.Done()
+		e.Flush()
+	}()
+
+	return e, nil
+
 }

@@ -7,11 +7,20 @@ import (
 	"net/http"
 	"time"
 
+	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"go.opencensus.io/exporter/prometheus"
-	"go.opencensus.io/stats/view"
 )
 
-func Exporter(ctx context.Context, port int) (view.Exporter, error) {
+func init() {
+	opencensus.RegisterExporterFactories(func(ctx context.Context, cfg opencensus.Config) (interface{}, error) {
+		return Exporter(ctx, cfg)
+	})
+}
+
+func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter, error) {
+	if cfg.Exporters.Prometheus == nil {
+		return nil, nil
+	}
 	exporter, err := prometheus.NewExporter(prometheus.Options{})
 	if err != nil {
 		return exporter, err
@@ -21,7 +30,7 @@ func Exporter(ctx context.Context, port int) (view.Exporter, error) {
 	router.Handle("/metrics", exporter)
 	server := http.Server{
 		Handler: router,
-		Addr:    fmt.Sprintf(":%d", port),
+		Addr:    fmt.Sprintf(":%d", cfg.Exporters.Prometheus.Port),
 	}
 
 	go func() { log.Fatal(server.ListenAndServe()) }()

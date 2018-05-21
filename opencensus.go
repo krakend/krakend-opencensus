@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/devopsfaith/krakend/config"
@@ -13,8 +14,27 @@ import (
 	"go.opencensus.io/trace"
 )
 
-func Register(cfg config.ServiceConfig, ve []view.Exporter, te []trace.Exporter, vs []*view.View) error {
-	return register.Register(cfg, ve, te, vs)
+type ExporterFactory func(context.Context, Config) (interface{}, error)
+
+func RegisterExporterFactories(ef ExporterFactory) {
+	mu.Lock()
+	exporterFactories = append(exporterFactories, ef)
+	mu.Unlock()
+}
+
+func Register(ctx context.Context, srvCfg config.ServiceConfig, vs ...*view.View) error {
+	cfg, err := parseCfg(srvCfg)
+	if err != nil {
+		return err
+	}
+
+	err = errSingletonExporterFactoriesRegister
+	registerOnce.Do(func() {
+		register.ExporterFactories(ctx, *cfg, exporterFactories)
+		err = register.Register(ctx, *cfg, vs)
+	})
+
+	return err
 }
 
 type composableRegister struct {
@@ -25,18 +45,31 @@ type composableRegister struct {
 	setReportingPeriod func(d time.Duration)
 }
 
-func (c composableRegister) Register(srvCfg config.ServiceConfig, ve []view.Exporter, te []trace.Exporter, vs []*view.View) error {
-	cfg, err := parseCfg(srvCfg)
-	if err != nil {
-		return err
+func (c *composableRegister) ExporterFactories(ctx context.Context, cfg Config, fs []ExporterFactory) {
+	viewExporters := []view.Exporter{}
+	traceExporters := []trace.Exporter{}
+
+	for _, f := range fs {
+		e, err := f(ctx, cfg)
+		if err != nil {
+			continue
+		}
+		if ve, ok := e.(view.Exporter); ok {
+			viewExporters = append(viewExporters, ve)
+		}
+		if te, ok := e.(trace.Exporter); ok {
+			traceExporters = append(traceExporters, te)
+		}
 	}
 
+	c.viewExporter(viewExporters...)
+	c.traceExporter(traceExporters...)
+}
+
+func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view.View) error {
 	if len(vs) == 0 {
 		vs = DefaultViews
 	}
-
-	c.viewExporter(ve...)
-	c.traceExporter(te...)
 
 	c.setDefaultSampler(cfg.SampleRate)
 	c.setReportingPeriod(time.Duration(cfg.ReportingPeriod) * time.Second)
@@ -47,6 +80,22 @@ func (c composableRegister) Register(srvCfg config.ServiceConfig, ve []view.Expo
 type Config struct {
 	SampleRate      int `json:"sample_rate"`
 	ReportingPeriod int `json:"reporting_period"`
+	Exporters       struct {
+		Zipkin *struct {
+			CollectorURL string `json:"collector_url"`
+			ServiceName  string `json:"service_name"`
+			IP           string `json:"ip"`
+			Port         int    `json:"port"`
+		} `json:"zipkin"`
+		Jaeger *struct {
+			Endpoint    string `json:"endpoint"`
+			ServiceName string `json:"service_name"`
+		} `json:"jaeger"`
+		Prometheus *struct {
+			Port int `json:"port"`
+		} `json:"prometheus"`
+		Logger *struct{} `json:"logger"`
+	} `json:"exporters"`
 }
 
 const (
@@ -55,22 +104,27 @@ const (
 )
 
 var (
-	ErrNoExtraConfig = errors.New("no extra config defined for the opencensus module")
-	DefaultViews     = append(ochttp.DefaultServerViews, ochttp.DefaultClientViews...)
-	register         = composableRegister{
+	DefaultViews = append(ochttp.DefaultServerViews, ochttp.DefaultClientViews...)
+
+	exporterFactories                     = []ExporterFactory{}
+	errNoExtraConfig                      = errors.New("no extra config defined for the opencensus module")
+	errSingletonExporterFactoriesRegister = errors.New("expecting only one exporter factory registration per instance")
+	mu                                    = new(sync.RWMutex)
+	register                              = composableRegister{
 		viewExporter:       registerViewExporter,
 		traceExporter:      registerTraceExporter,
 		setDefaultSampler:  setDefaultSampler,
 		setReportingPeriod: setReportingPeriod,
 		registerViews:      registerViews,
 	}
+	registerOnce *sync.Once
 )
 
 func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 	cfg := new(Config)
 	tmp, ok := srvCfg.ExtraConfig[Namespace]
 	if !ok {
-		return nil, ErrNoExtraConfig
+		return nil, errNoExtraConfig
 	}
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(tmp)

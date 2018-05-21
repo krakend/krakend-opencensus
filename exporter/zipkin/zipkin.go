@@ -1,20 +1,31 @@
 package zipkin
 
 import (
+	"context"
 	"net"
 
+	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"github.com/openzipkin/zipkin-go/model"
 	httpreporter "github.com/openzipkin/zipkin-go/reporter/http"
 	"go.opencensus.io/exporter/zipkin"
-	"go.opencensus.io/trace"
 )
 
-func Exporter(collectorURL, serviceName, IP string, port int) trace.Exporter {
+func init() {
+	opencensus.RegisterExporterFactories(func(ctx context.Context, cfg opencensus.Config) (interface{}, error) {
+		return Exporter(ctx, cfg)
+	})
+}
+
+func Exporter(_ context.Context, cfg opencensus.Config) (*zipkin.Exporter, error) {
+	if cfg.Exporters.Zipkin == nil {
+		return nil, nil
+	}
 	return zipkin.NewExporter(
-		httpreporter.NewReporter(collectorURL),
+		httpreporter.NewReporter(cfg.Exporters.Zipkin.CollectorURL),
 		&model.Endpoint{
-			ServiceName: serviceName,
-			IPv4:        net.ParseIP(IP),
-			Port:        uint16(port),
-		})
+			ServiceName: cfg.Exporters.Zipkin.ServiceName,
+			IPv4:        net.ParseIP(cfg.Exporters.Zipkin.IP),
+			Port:        uint16(cfg.Exporters.Zipkin.Port),
+		},
+	), nil
 }
