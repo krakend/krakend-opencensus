@@ -81,6 +81,16 @@ type Config struct {
 	SampleRate      int `json:"sample_rate"`
 	ReportingPeriod int `json:"reporting_period"`
 	Exporters       struct {
+		InfluxDB *struct {
+			Address      string `json:"address"`
+			Username     string `json:"username"`
+			Password     string `json:"password"`
+			Timeout      string `json:"timeout"`
+			PingEnabled  bool   `json:"ping"`
+			Database     string `json:"db"`
+			InstanceName string `json:"service_name"`
+			BufferSize   int    `json:"buffer_size"`
+		} `json:"influxdb"`
 		Zipkin *struct {
 			CollectorURL string `json:"collector_url"`
 			ServiceName  string `json:"service_name"`

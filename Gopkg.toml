@@ -1,6 +1,6 @@
 [[constraint]]
   name = "github.com/devopsfaith/krakend"
-  version = "0.4.2"
+  branch = "0.5-dev"
 
 [[constraint]]
   name = "github.com/gin-gonic/gin"
@@ -9,6 +9,10 @@
 [[constraint]]
   name = "go.opencensus.io"
   branch = "master"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/kpacha/opencensus-influxdb"
 
 [prune]
   non-go = true

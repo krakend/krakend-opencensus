@@ -15,6 +15,7 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
+  branch = "0.5-dev"
   name = "github.com/devopsfaith/krakend"
   packages = [
     "config",
@@ -22,13 +23,14 @@
     "encoding",
     "logging",
     "proxy",
+    "register",
+    "register/internal",
     "router",
     "router/gin",
     "router/mux",
     "sd"
   ]
-  revision = "f7f27225f65abd50ae1ef168970649f8fab3fbf3"
-  version = "0.4.2"
+  revision = "3158e758c1d269cba069cf0873a3744df2a5ff74"
 
 [[projects]]
   branch = "master"
@@ -51,6 +53,22 @@
   packages = ["proto"]
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/influxdata/influxdb"
+  packages = [
+    "client/v2",
+    "models",
+    "pkg/escape"
+  ]
+  revision = "02d7d4f043b34ecb4e9b2dbec298c6f9450c2a32"
+  version = "v1.5.2"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kpacha/opencensus-influxdb"
+  packages = ["."]
+  revision = "1b490a38de4c5c98e0414e4676aba2e00c5cfd45"
 
 [[projects]]
   name = "github.com/mattn/go-isatty"
@@ -136,7 +154,7 @@
     "trace/internal",
     "trace/propagation"
   ]
-  revision = "10cec2c05ea2cfb8b0d856711daedc49d8a45c56"
+  revision = "ebd8d31470fedf6c27d0e3056653ddff642509b8"
 
 [[projects]]
   branch = "master"
@@ -177,6 +195,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "24aab6982880636eca39dfeb4d51d96f4cfb539ac0f15550ef116394a1140836"
+  inputs-digest = "4f0dc42f79f1b5989541f9bca449e83f7fb408fcd283bd91cc0b1efa45f6a953"
   solver-name = "gps-cdcl"
   solver-version = 1
