@@ -11,11 +11,17 @@ import (
 
 var defaultClient = &http.Client{Transport: &ochttp.Transport{}}
 
-func NewHTTPClient(_ context.Context) *http.Client {
+func NewHTTPClient(ctx context.Context) *http.Client {
+	if !IsEnabled() {
+		return proxy.NewHTTPClient(ctx)
+	}
 	return defaultClient
 }
 
 func HTTPRequestExecutor(clientFactory proxy.HTTPClientFactory) proxy.HTTPRequestExecutor {
+	if !IsEnabled() {
+		return proxy.DefaultHTTPRequestExecutor(clientFactory)
+	}
 	return func(ctx context.Context, req *http.Request) (*http.Response, error) {
 		client := clientFactory(ctx)
 		if _, ok := client.Transport.(*ochttp.Transport); !ok {

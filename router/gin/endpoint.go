@@ -26,6 +26,9 @@ func New(hf krakendgin.HandlerFactory) krakendgin.HandlerFactory {
 }
 
 func HandlerFunc(cfg *config.EndpointConfig, next gin.HandlerFunc, prop propagation.HTTPFormat) gin.HandlerFunc {
+	if !opencensus.IsEnabled() {
+		return next
+	}
 	if prop == nil {
 		prop = &b3.HTTPFormat{}
 	}

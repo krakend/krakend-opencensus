@@ -32,6 +32,9 @@ func Register(ctx context.Context, srvCfg config.ServiceConfig, vs ...*view.View
 	registerOnce.Do(func() {
 		register.ExporterFactories(ctx, *cfg, exporterFactories)
 		err = register.Register(ctx, *cfg, vs)
+		if err == nil {
+			moduleEnabled = true
+		}
 	})
 
 	return err
@@ -127,8 +130,13 @@ var (
 		setReportingPeriod: setReportingPeriod,
 		registerViews:      registerViews,
 	}
-	registerOnce *sync.Once
+	registerOnce  *sync.Once
+	moduleEnabled bool
 )
+
+func IsEnabled() bool {
+	return moduleEnabled
+}
 
 func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 	cfg := new(Config)
