@@ -11,7 +11,7 @@ import (
 const errCtxCanceledMsg = "context canceled"
 
 func Middleware(name string) proxy.Middleware {
-	if !IsEnabled() {
+	if !IsPipeEnabled() {
 		return proxy.EmptyMiddleware
 	}
 	return func(next ...proxy.Proxy) proxy.Proxy {
@@ -42,7 +42,7 @@ func Middleware(name string) proxy.Middleware {
 }
 
 func ProxyFactory(pf proxy.Factory) proxy.FactoryFunc {
-	if !IsEnabled() {
+	if !IsPipeEnabled() {
 		return pf.New
 	}
 	return func(cfg *config.EndpointConfig) (proxy.Proxy, error) {
@@ -55,7 +55,7 @@ func ProxyFactory(pf proxy.Factory) proxy.FactoryFunc {
 }
 
 func BackendFactory(bf proxy.BackendFactory) proxy.BackendFactory {
-	if !IsEnabled() {
+	if !IsBackendEnabled() {
 		return bf
 	}
 	return func(cfg *config.Backend) proxy.Proxy {

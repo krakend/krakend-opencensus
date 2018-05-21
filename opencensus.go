@@ -31,10 +31,18 @@ func Register(ctx context.Context, srvCfg config.ServiceConfig, vs ...*view.View
 	err = errSingletonExporterFactoriesRegister
 	registerOnce.Do(func() {
 		register.ExporterFactories(ctx, *cfg, exporterFactories)
+
 		err = register.Register(ctx, *cfg, vs)
-		if err == nil {
-			moduleEnabled = true
+		if err != nil {
+			return
 		}
+
+		if cfg.EnabledLayers != nil {
+			enabledLayers = *cfg.EnabledLayers
+			return
+		}
+
+		enabledLayers = EnabledLayers{true, true, true}
 	})
 
 	return err
@@ -81,8 +89,9 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 }
 
 type Config struct {
-	SampleRate      int `json:"sample_rate"`
-	ReportingPeriod int `json:"reporting_period"`
+	SampleRate      int            `json:"sample_rate"`
+	ReportingPeriod int            `json:"reporting_period"`
+	EnabledLayers   *EnabledLayers `json:"reporting_period"`
 	Exporters       struct {
 		InfluxDB *struct {
 			Address      string `json:"address"`
@@ -131,11 +140,25 @@ var (
 		registerViews:      registerViews,
 	}
 	registerOnce  *sync.Once
-	moduleEnabled bool
+	enabledLayers EnabledLayers
 )
 
-func IsEnabled() bool {
-	return moduleEnabled
+type EnabledLayers struct {
+	Router  bool `json:"router"`
+	Pipe    bool `json:"pipe"`
+	Backend bool `json:"backend"`
+}
+
+func IsRouterEnabled() bool {
+	return enabledLayers.Router
+}
+
+func IsPipeEnabled() bool {
+	return enabledLayers.Pipe
+}
+
+func IsBackendEnabled() bool {
+	return enabledLayers.Backend
 }
 
 func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {

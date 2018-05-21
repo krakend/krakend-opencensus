@@ -12,14 +12,14 @@ import (
 var defaultClient = &http.Client{Transport: &ochttp.Transport{}}
 
 func NewHTTPClient(ctx context.Context) *http.Client {
-	if !IsEnabled() {
+	if !IsBackendEnabled() {
 		return proxy.NewHTTPClient(ctx)
 	}
 	return defaultClient
 }
 
 func HTTPRequestExecutor(clientFactory proxy.HTTPClientFactory) proxy.HTTPRequestExecutor {
-	if !IsEnabled() {
+	if !IsBackendEnabled() {
 		return proxy.DefaultHTTPRequestExecutor(clientFactory)
 	}
 	return func(ctx context.Context, req *http.Request) (*http.Response, error) {

@@ -11,7 +11,7 @@ import (
 )
 
 func New(hf mux.HandlerFactory) mux.HandlerFactory {
-	if !opencensus.IsEnabled() {
+	if !opencensus.IsRouterEnabled() {
 		return hf
 	}
 	return func(cfg *config.EndpointConfig, p proxy.Proxy) http.HandlerFunc {
