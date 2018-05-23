@@ -91,7 +91,7 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 type Config struct {
 	SampleRate      int            `json:"sample_rate"`
 	ReportingPeriod int            `json:"reporting_period"`
-	EnabledLayers   *EnabledLayers `json:"reporting_period"`
+	EnabledLayers   *EnabledLayers `json:"enabled_layers"`
 	Exporters       struct {
 		InfluxDB *struct {
 			Address      string `json:"address"`
@@ -139,7 +139,7 @@ var (
 		setReportingPeriod: setReportingPeriod,
 		registerViews:      registerViews,
 	}
-	registerOnce  *sync.Once
+	registerOnce  = new(sync.Once)
 	enabledLayers EnabledLayers
 )
 
