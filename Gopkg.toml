@@ -1,6 +1,6 @@
 [[constraint]]
   name = "github.com/devopsfaith/krakend"
-  branch = "0.5-dev"
+  version = "0.5"
 
 [[constraint]]
   name = "github.com/gin-gonic/gin"
