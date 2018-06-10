@@ -2,6 +2,7 @@ package zipkin
 
 import (
 	"context"
+	"errors"
 	"net"
 
 	opencensus "github.com/devopsfaith/krakend-opencensus"
@@ -18,7 +19,7 @@ func init() {
 
 func Exporter(_ context.Context, cfg opencensus.Config) (*zipkin.Exporter, error) {
 	if cfg.Exporters.Zipkin == nil {
-		return nil, nil
+		return nil, errDisabled
 	}
 	return zipkin.NewExporter(
 		httpreporter.NewReporter(cfg.Exporters.Zipkin.CollectorURL),
@@ -29,3 +30,5 @@ func Exporter(_ context.Context, cfg opencensus.Config) (*zipkin.Exporter, error
 		},
 	), nil
 }
+
+var errDisabled = errors.New("opencensus zipkin exporter disabled")

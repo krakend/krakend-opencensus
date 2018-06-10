@@ -2,6 +2,7 @@ package influxdb
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	opencensus "github.com/devopsfaith/krakend-opencensus"
@@ -16,7 +17,7 @@ func init() {
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*influxdb.Exporter, error) {
 	if cfg.Exporters.InfluxDB == nil {
-		return nil, nil
+		return nil, errDisabled
 	}
 	timeout, err := time.ParseDuration(cfg.Exporters.InfluxDB.Timeout)
 	if err != nil {
@@ -32,3 +33,5 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*influxdb.Exporter, e
 		ReportingPeriod: time.Duration(cfg.ReportingPeriod) * time.Second,
 	})
 }
+
+var errDisabled = errors.New("opencensus influxdb exporter disabled")
