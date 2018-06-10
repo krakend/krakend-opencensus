@@ -120,7 +120,7 @@ type Config struct {
 		Xray   *struct {
 			Region  string `json:"region"`
 			Version string `json:"version"`
-		}
+		} `json:"xray"`
 	} `json:"exporters"`
 }
 
