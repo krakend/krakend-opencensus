@@ -2,6 +2,7 @@ package jaeger
 
 import (
 	"context"
+	"errors"
 
 	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"go.opencensus.io/exporter/jaeger"
@@ -15,7 +16,7 @@ func init() {
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, error) {
 	if cfg.Exporters.Jaeger == nil {
-		return nil, nil
+		return nil, errDisabled
 	}
 	e, err := jaeger.NewExporter(jaeger.Options{
 		Endpoint:    cfg.Exporters.Jaeger.Endpoint,
@@ -33,3 +34,5 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 	return e, nil
 
 }
+
+var errDisabled = errors.New("opencensus jaeger exporter disabled")

@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -19,7 +20,7 @@ func init() {
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter, error) {
 	if cfg.Exporters.Prometheus == nil {
-		return nil, nil
+		return nil, errDisabled
 	}
 	exporter, err := prometheus.NewExporter(prometheus.Options{})
 	if err != nil {
@@ -44,3 +45,5 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 
 	return exporter, nil
 }
+
+var errDisabled = errors.New("opencensus prometheus exporter disabled")
