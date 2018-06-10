@@ -117,6 +117,10 @@ type Config struct {
 			Port int `json:"port"`
 		} `json:"prometheus"`
 		Logger *struct{} `json:"logger"`
+		Xray   *struct {
+			Region  string `json:"region"`
+			Version string `json:"version"`
+		}
 	} `json:"exporters"`
 }
 
