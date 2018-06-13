@@ -44,8 +44,8 @@
                     "timeout": "1s"
                 },
                 "zipkin": {
-                    "collectorURL": "http://192.168.99.100:9411/api/v2/spans",
-                    "serviceName": "krakend"
+                    "collector_url": "http://192.168.99.100:9411/api/v2/spans",
+                    "service_name": "krakend"
                 },
                 "prometheus": {
                     "port": 9091
