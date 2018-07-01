@@ -36,14 +36,10 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*aws.Exporter, error)
 		cfg.Exporters.Xray.Version = "KrakenD-opencensus"
 	}
 
-	exporter, err := aws.NewExporter(
+	return aws.NewExporter(
 		aws.WithRegion(cfg.Exporters.Xray.Region),
 		aws.WithInterval(time.Duration(cfg.ReportingPeriod)),
 		aws.WithBufferSize(cfg.SampleRate),
 		aws.WithVersion(cfg.Exporters.Xray.Version),
 	)
-	if err != nil {
-		return nil, err
-	}
-	return exporter, nil
 }
