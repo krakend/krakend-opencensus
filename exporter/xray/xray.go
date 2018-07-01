@@ -18,22 +18,31 @@ func init() {
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*aws.Exporter, error) {
 	if cfg.Exporters.Xray == nil {
-		return nil, errors.New("Xray exporter disabled.")
+		return nil, errors.New("xray exporter disabled")
 	}
-	if os.Getenv("AWS_ACCESS_KEY_ID") == "" || os.Getenv("AWS_SECRET_ACCESS_KEY") == "" || os.Getenv("AWS_DEFAULT_REGION") == "" {
-		return nil, errors.New("You need to setup ENV vars for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_DEFAULT_REGION to use the Opencensus Xray exporter.")
+	if cfg.Exporters.Xray.AccessKey == "" || cfg.Exporters.Xray.SecretKey == "" || cfg.Exporters.Xray.Region == "" {
+		return nil, errors.New("aws access_key_id, secret_access_key and region needs to be defined")
 	}
-	os.Getenv("AWS_DEFAULT_REGION")
+	if err := os.Setenv("AWS_ACCESS_KEY_ID", cfg.Exporters.Xray.AccessKey); err != nil {
+		return nil, errors.New("problem setting environment")
+	}
+	if err := os.Setenv("AWS_SECRET_ACCESS_KEY", cfg.Exporters.Xray.SecretKey); err != nil {
+		return nil, errors.New("problem setting environment")
+	}
+	if err := os.Setenv("AWS_DEFAULT_REGION", cfg.Exporters.Xray.Region); err != nil {
+		return nil, errors.New("problem setting environment")
+	}
 	if cfg.Exporters.Xray.Version == "" {
 		cfg.Exporters.Xray.Version = "KrakenD-opencensus"
 	}
+
 	exporter, err := aws.NewExporter(
 		aws.WithRegion(cfg.Exporters.Xray.Region),
 		aws.WithInterval(time.Duration(cfg.ReportingPeriod)),
 		aws.WithBufferSize(cfg.SampleRate),
 		aws.WithVersion(cfg.Exporters.Xray.Version),
 	)
-	if nil != err {
+	if err != nil {
 		return nil, err
 	}
 	return exporter, nil
