@@ -118,6 +118,7 @@ type Config struct {
 		} `json:"prometheus"`
 		Logger *struct{} `json:"logger"`
 		Xray   *struct {
+			UseEnv    bool   `json:"use_env"`
 			Region    string `json:"region"`
 			AccessKey string `json:"access_key_id"`
 			SecretKey string `json:"secret_access_key"`
