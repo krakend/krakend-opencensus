@@ -35,7 +35,7 @@
             "reporting_period": 1,
             "enabled_layers": {
                 "backend": true,
-                "router": true,
+                "router": true
             },
             "exporters": {
                 "influxdb": {
@@ -53,6 +53,12 @@
                 "jaeger": {
                     "endpoint": "http://192.168.99.100:14268",
                     "serviceName":"krakend"
+                },
+                "xray": {
+                  "version": "Krakend-opencensus",
+                  "region": "eu-west-1",
+                  "access_key_id": "myaccesskey",
+                  "secret_access_key": "mysecretkey"
                 },
                 "logger": {
                     "stats": true,
