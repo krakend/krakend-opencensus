@@ -35,7 +35,7 @@
             "reporting_period": 1,
             "enabled_layers": {
                 "backend": true,
-                "router": true,
+                "router": true
             },
             "exporters": {
                 "influxdb": {
@@ -59,7 +59,7 @@
                   "region": "eu-west-1",
                   "access_key_id": "myaccesskey",
                   "secret_access_key": "mysecretkey"
-                }
+                },
                 "logger": {
                     "stats": true,
                     "spans": true
