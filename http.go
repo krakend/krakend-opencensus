@@ -27,6 +27,6 @@ func HTTPRequestExecutor(clientFactory proxy.HTTPClientFactory) proxy.HTTPReques
 		if _, ok := client.Transport.(*ochttp.Transport); !ok {
 			client.Transport = &ochttp.Transport{Base: client.Transport}
 		}
-		return client.Do(req.WithContext(trace.WithSpan(ctx, fromContext(ctx))))
+		return client.Do(req.WithContext(trace.NewContext(ctx, fromContext(ctx))))
 	}
 }

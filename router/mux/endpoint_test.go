@@ -2,17 +2,37 @@ package mux
 
 import (
 	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
 	"math"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/devopsfaith/krakend-opencensus"
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 )
+
+var (
+	extraConfig = []byte(`{
+		"github_com/devopsfaith/krakend-opencensus": {
+			"enabled_layers": {
+				"router": true
+			}
+		}}`)
+	extraCfg map[string]interface{}
+)
+
+func init() {
+	if err := registerModule(); err != nil {
+		fmt.Printf("Problem registering opencensus module: %s", err.Error())
+	}
+}
 
 func TestNew(t *testing.T) {
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
@@ -98,4 +118,12 @@ func httpHandler(statusCode, respSize int) http.Handler {
 		body := make([]byte, respSize)
 		w.Write(body)
 	})
+}
+
+func registerModule() error {
+	if err := json.Unmarshal(extraConfig, &extraCfg); err != nil {
+		return err
+	}
+
+	return opencensus.Register(context.Background(), config.ServiceConfig{ExtraConfig: extraCfg})
 }

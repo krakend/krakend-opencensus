@@ -2,12 +2,16 @@ package gin
 
 import (
 	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
 	"math"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/devopsfaith/krakend-opencensus"
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
 	"github.com/gin-gonic/gin"
@@ -15,7 +19,24 @@ import (
 	"go.opencensus.io/stats/view"
 )
 
+var (
+	extraConfig = []byte(`{
+		"github_com/devopsfaith/krakend-opencensus": {
+			"enabled_layers": {
+				"router": true
+			}
+		}}`)
+	extraCfg map[string]interface{}
+)
+
+func init() {
+	if err := registerModule(); err != nil {
+		fmt.Printf("Problem registering opencensus module: %s", err.Error())
+	}
+}
+
 func TestNew_post(t *testing.T) {
+
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
 		t.Fatalf("Failed to register ochttp.DefaultServerViews error: %v", err)
 	}
@@ -46,6 +67,10 @@ func TestNew_post(t *testing.T) {
 }
 
 func TestNew_get(t *testing.T) {
+	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
+		t.Fatalf("Failed to register ochttp.DefaultServerViews error: %v", err)
+	}
+
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
 		t.Fatalf("Failed to register ochttp.DefaultServerViews error: %v", err)
 	}
@@ -129,4 +154,12 @@ func httpHandler(statusCode, respSize int) gin.HandlerFunc {
 		body := make([]byte, respSize)
 		c.Writer.Write(body)
 	}
+}
+
+func registerModule() error {
+	if err := json.Unmarshal(extraConfig, &extraCfg); err != nil {
+		return err
+	}
+
+	return opencensus.Register(context.Background(), config.ServiceConfig{ExtraConfig: extraCfg})
 }
