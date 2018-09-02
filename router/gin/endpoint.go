@@ -68,9 +68,9 @@ func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Reque
 	var span *trace.Span
 	sc, ok := h.extractSpanContext(r)
 	if ok && !h.IsPublicEndpoint {
-		span = trace.NewSpanWithRemoteParent(h.name, sc, h.StartOptions)
+		ctx, span = trace.StartSpanWithRemoteParent(ctx, h.name, sc, trace.WithSampler(h.StartOptions.Sampler), trace.WithSpanKind(h.StartOptions.SpanKind))
 	} else {
-		span = trace.NewSpan(h.name, nil, h.StartOptions)
+		ctx, span = trace.StartSpan(ctx, h.name, trace.WithSampler(h.StartOptions.Sampler), trace.WithSpanKind(h.StartOptions.SpanKind))
 		if ok {
 			span.AddLink(trace.Link{
 				TraceID:    sc.TraceID,
@@ -80,9 +80,8 @@ func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Reque
 			})
 		}
 	}
-	ctx = trace.WithSpan(ctx, span)
 	span.AddAttributes(requestAttrs(r)...)
-	return r.WithContext(trace.WithSpan(r.Context(), span)), span.End
+	return r.WithContext(ctx), span.End
 }
 
 func (h *handler) extractSpanContext(r *http.Request) (trace.SpanContext, bool) {

@@ -22,9 +22,9 @@ func Middleware(name string) proxy.Middleware {
 			panic(proxy.ErrNotEnoughProxies)
 		}
 		return func(ctx context.Context, req *proxy.Request) (*proxy.Response, error) {
-			span := trace.NewSpan(name, fromContext(ctx), trace.StartOptions{})
-
-			resp, err := next[0](trace.WithSpan(ctx, span), req)
+			var span *trace.Span
+			ctx, span = trace.StartSpan(trace.NewContext(ctx, fromContext(ctx)), name)
+			resp, err := next[0](ctx, req)
 
 			if err != nil {
 				if err.Error() != errCtxCanceledMsg {

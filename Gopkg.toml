@@ -6,9 +6,9 @@
   name = "github.com/gin-gonic/gin"
   version = "1.2.0"
 
-[[constraint]]
+[[override]]
   name = "go.opencensus.io"
-  branch = "master"
+  version = "0.15.0"
 
 [[constraint]]
   branch = "master"
