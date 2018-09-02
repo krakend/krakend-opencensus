@@ -3,12 +3,15 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:eee9386329f4fcdf8d6c0def0c9771b634bdd5ba460d888aa98c17d59b37a76c"
   name = "git.apache.org/thrift.git"
   packages = ["lib/go/thrift"]
+  pruneopts = "NUT"
   revision = "0293c3643b0075b510b9d92b2cc39b6d5e0fadb8"
   source = "github.com/apache/thrift"
 
 [[projects]]
+  digest = "1:4ef0a49a20e23a7432aac67c80125ac3dcf2c67b613a436defd04e4be14ef28f"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -41,24 +44,30 @@
     "private/protocol/xml/xmlutil",
     "service/sts",
     "service/xray",
-    "service/xray/xrayiface"
+    "service/xray/xrayiface",
   ]
+  pruneopts = "NUT"
   revision = "c9af76f2478f81c6566d0f7f4d522254ec7c0b52"
   version = "v1.14.3"
 
 [[projects]]
   branch = "master"
+  digest = "1:707ebe952a8b3d00b343c01536c79c73771d100f63ec6babeaed5c79e2b8a8dd"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
+  pruneopts = "NUT"
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
   branch = "master"
+  digest = "1:8359d27322f9e9e6b86771a6f00552a8afeb27e53b599944487a643979e9b989"
   name = "github.com/census-ecosystem/opencensus-go-exporter-aws"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "41633bc1ff6bd23f2beb03aafb533465f3e774d8"
 
 [[projects]]
+  digest = "1:7b33cae5674a1ed0f8ec3588786530fac8df5f237e1e5b349cec8bce6a9ad089"
   name = "github.com/devopsfaith/krakend"
   packages = [
     "config",
@@ -71,125 +80,157 @@
     "router",
     "router/gin",
     "router/mux",
-    "sd"
+    "sd",
   ]
+  pruneopts = "NUT"
   revision = "a9119126330c3d376857bdd6ec05c57c2dea670b"
   version = "0.5"
 
 [[projects]]
   branch = "master"
+  digest = "1:23edf5aaca7a1f15d68215ac41595c0732152757e9d7b3f282821222784049f1"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
 
 [[projects]]
+  digest = "1:10095a140b7829bcf199c8447725c0b1b9874a527b3d73cb2fc9ffc4a5fe8178"
   name = "github.com/gin-gonic/gin"
   packages = [
     ".",
     "binding",
-    "render"
+    "render",
   ]
+  pruneopts = "NUT"
   revision = "d459835d2b077e44f7c9b453505ee29881d5d12d"
   version = "v1.2"
 
 [[projects]]
+  digest = "1:30b09d75e7e16119e85020374df10ea06f263c9bdff72afdc1522838b9609375"
   name = "github.com/go-ini/ini"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
   version = "v1.37.0"
 
 [[projects]]
+  digest = "1:9f35c1344b56e5868d511d231f215edd0650aa572664f856444affdd256e43e4"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
+  pruneopts = "NUT"
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:ce530152667dc8ba823a586c1c81175aff2c4e15500520883a2727d0ed17c6f1"
   name = "github.com/influxdata/influxdb"
   packages = [
     "client/v2",
     "models",
-    "pkg/escape"
+    "pkg/escape",
   ]
+  pruneopts = "NUT"
   revision = "02d7d4f043b34ecb4e9b2dbec298c6f9450c2a32"
   version = "v1.5.2"
 
 [[projects]]
+  digest = "1:ac6d01547ec4f7f673311b4663909269bfb8249952de3279799289467837c3cc"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "0b12d6b5"
 
 [[projects]]
   branch = "master"
+  digest = "1:a5b6d20be9785cca8201be0beaf4cad323ff9fe7a45279f25047e479d69724be"
   name = "github.com/kpacha/opencensus-influxdb"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "1b490a38de4c5c98e0414e4676aba2e00c5cfd45"
 
 [[projects]]
+  digest = "1:bc4f7eec3b7be8c6cb1f0af6c1e3333d5bb71072951aaaae2f05067b0803f287"
   name = "github.com/mattn/go-isatty"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
   version = "v0.0.3"
 
 [[projects]]
+  digest = "1:5985ef4caf91ece5d54817c11ea25f182697534f8ae6521eadcd628c142ac4b6"
   name = "github.com/matttproud/golang_protobuf_extensions"
   packages = ["pbutil"]
+  pruneopts = "NUT"
   revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:97afddc627fe263e3e936f5232173e505171f6f05d7d7a652a697c5f99a02a30"
   name = "github.com/openzipkin/zipkin-go"
   packages = [
     "model",
     "reporter",
-    "reporter/http"
+    "reporter/http",
   ]
+  pruneopts = "NUT"
   revision = "f197ec29e729f226d23370ea60f0e49b8f44ccf4"
   version = "v0.1.0"
 
 [[projects]]
+  digest = "1:03bca087b180bf24c4f9060775f137775550a0834e18f0bca0520a868679dbd7"
   name = "github.com/prometheus/client_golang"
   packages = [
     "prometheus",
-    "prometheus/promhttp"
+    "prometheus/promhttp",
   ]
+  pruneopts = "NUT"
   revision = "c5b7fccd204277076155f10851dad72b76a49317"
   version = "v0.8.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:32d10bdfa8f09ecf13598324dba86ab891f11db3c538b6a34d1c3b5b99d7c36b"
   name = "github.com/prometheus/client_model"
   packages = ["go"]
+  pruneopts = "NUT"
   revision = "99fa1f4be8e564e8a6b613da7fa6f46c9edafc6c"
 
 [[projects]]
   branch = "master"
+  digest = "1:768b555b86742de2f28beb37f1dedce9a75f91f871d75b5717c96399c1a78c08"
   name = "github.com/prometheus/common"
   packages = [
     "expfmt",
     "internal/bitbucket.org/ww/goautoneg",
-    "model"
+    "model",
   ]
+  pruneopts = "NUT"
   revision = "d811d2e9bf898806ecfb6ef6296774b13ffc314c"
 
 [[projects]]
   branch = "master"
+  digest = "1:c4a213a8d73fbb0b13f717ba7996116602ef18ecb42b91d77405877914cb0349"
   name = "github.com/prometheus/procfs"
   packages = [
     ".",
     "internal/util",
     "nfs",
-    "xfs"
+    "xfs",
   ]
+  pruneopts = "NUT"
   revision = "8b1c2da0d56deffdbb9e48d4414b4e674bd8083e"
 
 [[projects]]
+  digest = "1:919fc2a81add8ac4a7a236dceaf3e4c29ba4df96d13c3f2ce13a4d0132ebefb8"
   name = "github.com/ugorji/go"
   packages = ["codec"]
+  pruneopts = "NUT"
   revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:6fbd35823b75f0b9c676ac5c3e0b36bad146aa321d0c9280de699fceb00032d9"
   name = "go.opencensus.io"
   packages = [
     ".",
@@ -207,50 +248,88 @@
     "tag",
     "trace",
     "trace/internal",
-    "trace/propagation"
+    "trace/propagation",
   ]
+  pruneopts = "NUT"
   revision = "7b558058b7cc960667590e5413ef55157b06652e"
   version = "v0.15.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
   name = "golang.org/x/net"
   packages = ["context"]
+  pruneopts = "NUT"
   revision = "5f9ae10d9af5b1c89ae6904293b14b064d4ada23"
 
 [[projects]]
   branch = "master"
+  digest = "1:e0140c0c868c6e0f01c0380865194592c011fe521d6e12d78bfd33e756fe018a"
   name = "golang.org/x/sync"
   packages = ["semaphore"]
+  pruneopts = "NUT"
   revision = "1d60e4601c6fd243af51cc01ddf169918a5407ca"
 
 [[projects]]
   branch = "master"
+  digest = "1:5f25f6acbe91e1fbedecd14d42c655fabb58a9365d1618446e683f0162bb3374"
   name = "golang.org/x/sys"
   packages = ["unix"]
+  pruneopts = "NUT"
   revision = "4adea008a5e5f820b6028611ae0b6b3fbcec534b"
 
 [[projects]]
   branch = "master"
+  digest = "1:aadc5fc116676701163ca843a0284ab54855fb4394ab99daa8a651df56eda10b"
   name = "google.golang.org/api"
   packages = ["support/bundler"]
+  pruneopts = "NUT"
   revision = "2b26f0d5dbe6eea8c0924349bb024673f8105fd9"
 
 [[projects]]
+  digest = "1:0215407129c5f116ae8f6d3af64df59c39d3f606a72ef77a1e6ed874f92a8d9c"
   name = "gopkg.in/go-playground/validator.v8"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "5f1438d3fca68893a817e4a66806cea46a9e4ebf"
   version = "v8.18.2"
 
 [[projects]]
+  digest = "1:7c95b35057a0ff2e19f707173cc1a947fa43a6eb5c4d300d196ece0334046082"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
   version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "68624a05c67cb517ad0dffea519db57d607368e0acf2a2a287606944ff312396"
+  input-imports = [
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/xray",
+    "github.com/census-ecosystem/opencensus-go-exporter-aws",
+    "github.com/devopsfaith/krakend/config",
+    "github.com/devopsfaith/krakend/logging",
+    "github.com/devopsfaith/krakend/proxy",
+    "github.com/devopsfaith/krakend/router/gin",
+    "github.com/devopsfaith/krakend/router/mux",
+    "github.com/gin-gonic/gin",
+    "github.com/kpacha/opencensus-influxdb",
+    "github.com/openzipkin/zipkin-go/model",
+    "github.com/openzipkin/zipkin-go/reporter/http",
+    "go.opencensus.io/exporter/jaeger",
+    "go.opencensus.io/exporter/prometheus",
+    "go.opencensus.io/exporter/zipkin",
+    "go.opencensus.io/plugin/ochttp",
+    "go.opencensus.io/plugin/ochttp/propagation/b3",
+    "go.opencensus.io/stats",
+    "go.opencensus.io/stats/view",
+    "go.opencensus.io/tag",
+    "go.opencensus.io/trace",
+    "go.opencensus.io/trace/propagation",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
