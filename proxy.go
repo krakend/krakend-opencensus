@@ -23,7 +23,7 @@ func Middleware(name string) proxy.Middleware {
 		}
 		return func(ctx context.Context, req *proxy.Request) (*proxy.Response, error) {
 			var span *trace.Span
-			ctx, span = trace.StartSpan(ctx, req.URL.Path)
+			ctx, span = trace.StartSpan(ctx, name)
 			resp, err := next[0](ctx, req)
 
 			if err != nil {
