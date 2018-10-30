@@ -1,6 +1,6 @@
 [[constraint]]
   name = "github.com/devopsfaith/krakend"
-  version = "0.5"
+  version = "0.7.0"
 
 [[constraint]]
   name = "github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/census-ecosystem/opencensus-go-exporter-aws"
-  
+
 [prune]
   non-go = true
   go-tests = true
