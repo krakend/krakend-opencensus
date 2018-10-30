@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/devopsfaith/krakend/proxy"
+	transport "github.com/devopsfaith/krakend/transport/http/client"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
 )
@@ -13,14 +13,14 @@ var defaultClient = &http.Client{Transport: &ochttp.Transport{}}
 
 func NewHTTPClient(ctx context.Context) *http.Client {
 	if !IsBackendEnabled() {
-		return proxy.NewHTTPClient(ctx)
+		return transport.NewHTTPClient(ctx)
 	}
 	return defaultClient
 }
 
-func HTTPRequestExecutor(clientFactory proxy.HTTPClientFactory) proxy.HTTPRequestExecutor {
+func HTTPRequestExecutor(clientFactory transport.HTTPClientFactory) transport.HTTPRequestExecutor {
 	if !IsBackendEnabled() {
-		return proxy.DefaultHTTPRequestExecutor(clientFactory)
+		return transport.DefaultHTTPRequestExecutor(clientFactory)
 	}
 	return func(ctx context.Context, req *http.Request) (*http.Response, error) {
 		client := clientFactory(ctx)

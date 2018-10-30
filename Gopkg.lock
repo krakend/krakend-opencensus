@@ -67,7 +67,7 @@
   revision = "41633bc1ff6bd23f2beb03aafb533465f3e774d8"
 
 [[projects]]
-  digest = "1:7b33cae5674a1ed0f8ec3588786530fac8df5f237e1e5b349cec8bce6a9ad089"
+  digest = "1:18006e4843becf30a3fbd551dd6df05931e0dcc656b8aea5f631079d8a4de3f9"
   name = "github.com/devopsfaith/krakend"
   packages = [
     "config",
@@ -81,10 +81,12 @@
     "router/gin",
     "router/mux",
     "sd",
+    "transport/http/client",
+    "transport/http/server",
   ]
   pruneopts = "NUT"
-  revision = "a9119126330c3d376857bdd6ec05c57c2dea670b"
-  version = "0.5"
+  revision = "f82f671d8f1dc151d22949a5a3902f487c76ac23"
+  version = "0.7.0"
 
 [[projects]]
   branch = "master"
@@ -316,6 +318,7 @@
     "github.com/devopsfaith/krakend/proxy",
     "github.com/devopsfaith/krakend/router/gin",
     "github.com/devopsfaith/krakend/router/mux",
+    "github.com/devopsfaith/krakend/transport/http/client",
     "github.com/gin-gonic/gin",
     "github.com/kpacha/opencensus-influxdb",
     "github.com/openzipkin/zipkin-go/model",
