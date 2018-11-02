@@ -124,6 +124,14 @@ type Config struct {
 			SecretKey string `json:"secret_access_key"`
 			Version   string `json:"version"`
 		} `json:"xray"`
+		Stackdriver *struct {
+			ProjectID       string            `json:"project_id"`
+			MetricPrefix    string            `json:"metric_prefix"`
+			DefaultLabels   map[string]string `json:"default_labels"`
+			DelayThreshold  string            `json:"delay_threshold"`
+			CountThreshold  int               `json:"count_threshold"`
+			WithCredentials string            `json:"with_credentials"`
+		} `json:"stackdriver"`
 	} `json:"exporters"`
 }
 
