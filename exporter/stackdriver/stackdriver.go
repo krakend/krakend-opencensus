@@ -5,9 +5,8 @@ import (
 	"errors"
 	"time"
 
-	ocStackdriver "contrib.go.opencensus.io/exporter/stackdriver"
+	"contrib.go.opencensus.io/exporter/stackdriver"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
-	"google.golang.org/api/option"
 )
 
 func init() {
@@ -16,29 +15,24 @@ func init() {
 	})
 }
 
-func Exporter(ctx context.Context, cfg opencensus.Config) (*ocStackdriver.Exporter, error) {
+func Exporter(ctx context.Context, cfg opencensus.Config) (*stackdriver.Exporter, error) {
 	if cfg.Exporters.Stackdriver == nil {
 		return nil, errors.New("stackdriver exporter disabled")
 	}
 	if cfg.Exporters.Stackdriver.MetricPrefix == "" {
 		cfg.Exporters.Stackdriver.MetricPrefix = "KrakenD"
 	}
-	labels := &ocStackdriver.Labels{}
+	labels := &stackdriver.Labels{}
 
 	for k, v := range cfg.Exporters.Stackdriver.DefaultLabels {
 		labels.Set(k, v, "")
 	}
 
-	var options []option.ClientOption
-	if cfg.Exporters.Stackdriver.WithCredentials != "" {
-		options = append(options, option.WithCredentialsFile(cfg.Exporters.Stackdriver.WithCredentials))
-	}
-	return ocStackdriver.NewExporter(ocStackdriver.Options{
+	return stackdriver.NewExporter(stackdriver.Options{
 		ProjectID:               cfg.Exporters.Stackdriver.ProjectID,
 		MetricPrefix:            cfg.Exporters.Stackdriver.MetricPrefix,
-		BundleDelayThreshold:    time.Duration(cfg.ReportingPeriod),
+		BundleDelayThreshold:    time.Duration(cfg.ReportingPeriod) * time.Second,
 		BundleCountThreshold:    cfg.Exporters.Stackdriver.CountThreshold,
 		DefaultMonitoringLabels: labels,
-		MonitoringClientOptions: options,
 	})
 }
