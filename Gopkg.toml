@@ -18,6 +18,10 @@
   branch = "master"
   name = "github.com/census-ecosystem/opencensus-go-exporter-aws"
 
+[[constraint]]
+  version = "0.7.0"
+  name = "contrib.go.opencensus.io/exporter/stackdriver"
+
 [prune]
   non-go = true
   go-tests = true
