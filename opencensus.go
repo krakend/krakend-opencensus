@@ -125,12 +125,9 @@ type Config struct {
 			Version   string `json:"version"`
 		} `json:"xray"`
 		Stackdriver *struct {
-			ProjectID       string            `json:"project_id"`
-			MetricPrefix    string            `json:"metric_prefix"`
-			DefaultLabels   map[string]string `json:"default_labels"`
-			DelayThreshold  string            `json:"delay_threshold"`
-			CountThreshold  int               `json:"count_threshold"`
-			WithCredentials string            `json:"with_credentials"`
+			ProjectID     string            `json:"project_id"`
+			MetricPrefix  string            `json:"metric_prefix"`
+			DefaultLabels map[string]string `json:"default_labels"`
 		} `json:"stackdriver"`
 	} `json:"exporters"`
 }

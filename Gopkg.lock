@@ -15,15 +15,15 @@
   version = "v0.32.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:c36708793e406ad461fa7eea17b66709088672f60161397d2b25ed97f1e440f5"
+  digest = "1:2c2c161e4e8f05f3e0b53c22523277342ae4a0b3b3657ddd18a492edf4bc9f17"
   name = "contrib.go.opencensus.io/exporter/stackdriver"
   packages = [
     ".",
     "monitoredresource",
   ]
   pruneopts = "NUT"
-  revision = "65a75dfc67cb2100e2df6a2799a321ef8d259970"
+  revision = "f6033e3f5e239c2fac5d6443ccdc2116d8c2850d"
+  version = "v0.7.0"
 
 [[projects]]
   branch = "master"

@@ -15,15 +15,17 @@ func init() {
 	})
 }
 
+var defaultMetricPrefix = "krakend"
+
 func Exporter(ctx context.Context, cfg opencensus.Config) (*stackdriver.Exporter, error) {
 	if cfg.Exporters.Stackdriver == nil {
 		return nil, errors.New("stackdriver exporter disabled")
 	}
 	if cfg.Exporters.Stackdriver.MetricPrefix == "" {
-		cfg.Exporters.Stackdriver.MetricPrefix = "KrakenD"
+		cfg.Exporters.Stackdriver.MetricPrefix = defaultMetricPrefix
 	}
-	labels := &stackdriver.Labels{}
 
+	labels := &stackdriver.Labels{}
 	for k, v := range cfg.Exporters.Stackdriver.DefaultLabels {
 		labels.Set(k, v, "")
 	}
@@ -32,7 +34,7 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*stackdriver.Exporter
 		ProjectID:               cfg.Exporters.Stackdriver.ProjectID,
 		MetricPrefix:            cfg.Exporters.Stackdriver.MetricPrefix,
 		BundleDelayThreshold:    time.Duration(cfg.ReportingPeriod) * time.Second,
-		BundleCountThreshold:    cfg.Exporters.Stackdriver.CountThreshold,
+		BundleCountThreshold:    cfg.SampleRate,
 		DefaultMonitoringLabels: labels,
 	})
 }

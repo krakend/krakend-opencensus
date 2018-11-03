@@ -19,7 +19,7 @@
   name = "github.com/census-ecosystem/opencensus-go-exporter-aws"
 
 [[constraint]]
-  branch = "master"
+  version = "0.7.0"
   name = "contrib.go.opencensus.io/exporter/stackdriver"
 
 [prune]
