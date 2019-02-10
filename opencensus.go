@@ -138,7 +138,21 @@ const (
 )
 
 var (
-	DefaultViews = append(ochttp.DefaultServerViews, ochttp.DefaultClientViews...)
+	DefaultViews = []*view.View{
+		ochttp.ClientRequestCountView,
+		ochttp.ClientRequestBytesView,
+		ochttp.ClientResponseBytesView,
+		ochttp.ClientLatencyView,
+		ochttp.ClientRequestCountByMethod,
+		ochttp.ClientResponseCountByStatusCode,
+
+		ochttp.ServerRequestCountView,
+		ochttp.ServerRequestBytesView,
+		ochttp.ServerResponseBytesView,
+		ochttp.ServerLatencyView,
+		ochttp.ServerRequestCountByMethod,
+		ochttp.ServerResponseCountByStatusCode,
+	}
 
 	exporterFactories                     = []ExporterFactory{}
 	errNoExtraConfig                      = errors.New("no extra config defined for the opencensus module")
