@@ -139,12 +139,10 @@ const (
 
 var (
 	DefaultViews = []*view.View{
-		ochttp.ClientRequestCountView,
-		ochttp.ClientRequestBytesView,
-		ochttp.ClientResponseBytesView,
-		ochttp.ClientLatencyView,
-		ochttp.ClientRequestCountByMethod,
-		ochttp.ClientResponseCountByStatusCode,
+		ochttp.ClientSentBytesDistribution,
+		ochttp.ClientReceivedBytesDistribution,
+		ochttp.ClientRoundtripLatencyDistribution,
+		ochttp.ClientCompletedCount,
 
 		ochttp.ServerRequestCountView,
 		ochttp.ServerRequestBytesView,
