@@ -15,6 +15,33 @@
   version = "v0.32.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:44b662be3dd9fb632f67b5930536a523786d17d6e8c17c0fc960811c71aec4fd"
+  name = "contrib.go.opencensus.io/exporter/aws"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "2befc13012d0b3486eb8effda5735b6f0730e645"
+
+[[projects]]
+  branch = "master"
+  digest = "1:3855ded49ed8baccfc4d239a939448b10a13d37975a4114c538efc9bcdc70268"
+  name = "contrib.go.opencensus.io/exporter/jaeger"
+  packages = [
+    ".",
+    "internal/gen-go/jaeger",
+  ]
+  pruneopts = "NUT"
+  revision = "5b8293c22f362562285c2acbc52f4a1870a47a33"
+
+[[projects]]
+  branch = "master"
+  digest = "1:642cf8e80572f9dc0677b0f241c8ab2e715c9dccc215270ea873c86ddca0062c"
+  name = "contrib.go.opencensus.io/exporter/prometheus"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "f02a6e68f94d3841b92ab6f1ab38b4c3e45d2c9f"
+
+[[projects]]
   digest = "1:2c2c161e4e8f05f3e0b53c22523277342ae4a0b3b3657ddd18a492edf4bc9f17"
   name = "contrib.go.opencensus.io/exporter/stackdriver"
   packages = [
@@ -27,12 +54,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:eee9386329f4fcdf8d6c0def0c9771b634bdd5ba460d888aa98c17d59b37a76c"
-  name = "git.apache.org/thrift.git"
+  digest = "1:4e4ac4b44a7e57d960e83f5bdaec9bf26bf192aec12769bd98e1dfd32724bded"
+  name = "contrib.go.opencensus.io/exporter/zipkin"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "c96617f51dc6c558ca0869abd0c3d96d534a37de"
+
+[[projects]]
+  digest = "1:b39cf81d5f440b9c0757a25058432d33af867e5201109bf53621356d9dab4b73"
+  name = "github.com/apache/thrift"
   packages = ["lib/go/thrift"]
   pruneopts = "NUT"
-  revision = "0293c3643b0075b510b9d92b2cc39b6d5e0fadb8"
-  source = "github.com/apache/thrift"
+  revision = "384647d290e2e4a55a14b1b7ef1b7e66293a2c33"
+  version = "v0.12.0"
 
 [[projects]]
   digest = "1:4ef0a49a20e23a7432aac67c80125ac3dcf2c67b613a436defd04e4be14ef28f"
@@ -84,14 +118,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8359d27322f9e9e6b86771a6f00552a8afeb27e53b599944487a643979e9b989"
-  name = "github.com/census-ecosystem/opencensus-go-exporter-aws"
-  packages = ["."]
+  digest = "1:e82606c8a330aab4fbd5b0c75aa5228de92964400154a4ed41fb0b0b3125ccc2"
+  name = "github.com/devopsfaith/flatmap"
+  packages = ["tree"]
   pruneopts = "NUT"
-  revision = "41633bc1ff6bd23f2beb03aafb533465f3e774d8"
+  revision = "8d71d61e07ac04dcb1661ae30e22893a66439981"
 
 [[projects]]
-  digest = "1:18006e4843becf30a3fbd551dd6df05931e0dcc656b8aea5f631079d8a4de3f9"
+  digest = "1:4428c4591103177cee86a5fda327d85585755728f1e485407ec7e7626a58a7e6"
   name = "github.com/devopsfaith/krakend"
   packages = [
     "config",
@@ -109,8 +143,8 @@
     "transport/http/server",
   ]
   pruneopts = "NUT"
-  revision = "f82f671d8f1dc151d22949a5a3902f487c76ac23"
-  version = "0.7.0"
+  revision = "1d20c1916774358fb9a86726f1e9633e133c5b90"
+  version = "0.9.0"
 
 [[projects]]
   branch = "master"
@@ -165,6 +199,14 @@
   pruneopts = "NUT"
   revision = "317e0006254c44a0ac427cc52a0e083ff0b9622f"
   version = "v2.0.0"
+
+[[projects]]
+  digest = "1:67474f760e9ac3799f740db2c489e6423a4cde45520673ec123ac831ad849cb8"
+  name = "github.com/hashicorp/golang-lru"
+  packages = ["simplelru"]
+  pruneopts = "NUT"
+  revision = "7087cb70de9f7a8bc0a10c375cb0d2280a8edf9c"
+  version = "v0.5.1"
 
 [[projects]]
   digest = "1:ce530152667dc8ba823a586c1c81175aff2c4e15500520883a2727d0ed17c6f1"
@@ -274,21 +316,20 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:f711b27c71cf4ad03c6929e2cc98f016f58a3872b07ffe23806b4af482c4bd77"
+  digest = "1:f12f23f8355d495a7777dadf880fce7ab1a80fd05bf22e04414c715c481a468b"
   name = "go.opencensus.io"
   packages = [
     ".",
-    "exemplar",
-    "exporter/jaeger",
-    "exporter/jaeger/internal/gen-go/jaeger",
-    "exporter/prometheus",
     "exporter/stackdriver/propagation",
-    "exporter/zipkin",
     "internal",
     "internal/tagencoding",
+    "metric/metricdata",
+    "metric/metricexport",
+    "metric/metricproducer",
     "plugin/ocgrpc",
     "plugin/ochttp",
     "plugin/ochttp/propagation/b3",
+    "resource",
     "stats",
     "stats/internal",
     "stats/view",
@@ -299,8 +340,8 @@
     "trace/tracestate",
   ]
   pruneopts = "NUT"
-  revision = "2b5032d79456124f42db6b7eb19ac6c155449dc2"
-  version = "v0.19.0"
+  revision = "df6e2001952312404b06f5f6f03fcb4aec1648e5"
+  version = "v0.21.0"
 
 [[projects]]
   branch = "master"
@@ -485,12 +526,15 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "contrib.go.opencensus.io/exporter/aws",
+    "contrib.go.opencensus.io/exporter/jaeger",
+    "contrib.go.opencensus.io/exporter/prometheus",
     "contrib.go.opencensus.io/exporter/stackdriver",
+    "contrib.go.opencensus.io/exporter/zipkin",
     "github.com/aws/aws-sdk-go/aws",
     "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/xray",
-    "github.com/census-ecosystem/opencensus-go-exporter-aws",
     "github.com/devopsfaith/krakend/config",
     "github.com/devopsfaith/krakend/logging",
     "github.com/devopsfaith/krakend/proxy",
@@ -501,9 +545,6 @@
     "github.com/kpacha/opencensus-influxdb",
     "github.com/openzipkin/zipkin-go/model",
     "github.com/openzipkin/zipkin-go/reporter/http",
-    "go.opencensus.io/exporter/jaeger",
-    "go.opencensus.io/exporter/prometheus",
-    "go.opencensus.io/exporter/zipkin",
     "go.opencensus.io/plugin/ochttp",
     "go.opencensus.io/plugin/ochttp/propagation/b3",
     "go.opencensus.io/stats",
