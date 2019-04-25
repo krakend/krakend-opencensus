@@ -5,10 +5,10 @@ import (
 	"errors"
 	"net"
 
+	"contrib.go.opencensus.io/exporter/zipkin"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"github.com/openzipkin/zipkin-go/model"
 	httpreporter "github.com/openzipkin/zipkin-go/reporter/http"
-	"go.opencensus.io/exporter/zipkin"
 )
 
 func init() {

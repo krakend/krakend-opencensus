@@ -5,11 +5,11 @@ import (
 	"errors"
 	"time"
 
+	ocAws "contrib.go.opencensus.io/exporter/aws"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/xray"
-	ocAws "github.com/census-ecosystem/opencensus-go-exporter-aws"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
 )
 

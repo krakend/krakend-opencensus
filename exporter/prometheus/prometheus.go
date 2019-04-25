@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"contrib.go.opencensus.io/exporter/prometheus"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
-	"go.opencensus.io/exporter/prometheus"
 )
 
 func init() {
