@@ -22,7 +22,8 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 	if cfg.Exporters.Prometheus == nil {
 		return nil, errDisabled
 	}
-	exporter, err := prometheus.NewExporter(prometheus.Options{})
+
+	exporter, err := prometheus.NewExporter(prometheus.Options{Namespace: cfg.Exporters.Prometheus.Namespace})
 	if err != nil {
 		return exporter, err
 	}
