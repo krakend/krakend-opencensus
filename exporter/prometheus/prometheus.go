@@ -22,7 +22,13 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 	if cfg.Exporters.Prometheus == nil {
 		return nil, errDisabled
 	}
-	exporter, err := prometheus.NewExporter(prometheus.Options{})
+
+	ns := "krakend"
+	if cfg.Exporters.Prometheus.Namespace != "" {
+		ns = cfg.Exporters.Prometheus.Namespace
+	}
+
+	exporter, err := prometheus.NewExporter(prometheus.Options{Namespace: ns})
 	if err != nil {
 		return exporter, err
 	}

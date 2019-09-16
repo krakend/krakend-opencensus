@@ -114,7 +114,8 @@ type Config struct {
 			ServiceName string `json:"service_name"`
 		} `json:"jaeger"`
 		Prometheus *struct {
-			Port int `json:"port"`
+			Namespace string `json:"namespace"`
+			Port      int    `json:"port"`
 		} `json:"prometheus"`
 		Logger *struct{} `json:"logger"`
 		Xray   *struct {
