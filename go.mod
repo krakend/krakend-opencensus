@@ -1,0 +1,46 @@
+module github.com/devopsfaith/krakend-opencensus
+
+go 1.13
+
+require (
+	cloud.google.com/go v0.34.0
+	contrib.go.opencensus.io/exporter/aws v0.0.0-20181029163544-2befc13012d0
+	contrib.go.opencensus.io/exporter/jaeger v0.0.0-20190424224017-5b8293c22f36
+	contrib.go.opencensus.io/exporter/prometheus v0.0.0-20190424224027-f02a6e68f94d
+	contrib.go.opencensus.io/exporter/stackdriver v0.7.0
+	contrib.go.opencensus.io/exporter/zipkin v0.0.0-20190424224031-c96617f51dc6
+	github.com/apache/thrift v0.12.0
+	github.com/aws/aws-sdk-go v1.15.31
+	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973
+	github.com/devopsfaith/flatmap v0.0.0-20190628155411-90b768d6668b
+	github.com/devopsfaith/krakend v0.0.0-20190921111907-6ff3a6860ce0
+	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7
+	github.com/gin-gonic/gin v1.1.5-0.20170702092826-d459835d2b07
+	github.com/go-ini/ini v1.37.0
+	github.com/golang/protobuf v1.2.0
+	github.com/googleapis/gax-go v2.0.0+incompatible
+	github.com/hashicorp/golang-lru v0.5.1
+	github.com/influxdata/influxdb v1.5.2
+	github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8
+	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
+	github.com/mattn/go-isatty v0.0.3
+	github.com/matttproud/golang_protobuf_extensions v1.0.1
+	github.com/openzipkin/zipkin-go v0.1.6
+	github.com/prometheus/client_golang v0.9.3-0.20190127221311-3c4408c8b829
+	github.com/prometheus/client_model v0.0.0-20190115171406-56726106282f
+	github.com/prometheus/common v0.2.0
+	github.com/prometheus/procfs v0.0.0-20190117184657-bf6a532e95b1
+	github.com/ugorji/go v1.1.1
+	go.opencensus.io v0.21.0
+	golang.org/x/net v0.0.0-20190921015927-1a5e07d1ff72
+	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
+	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
+	golang.org/x/text v0.3.0
+	google.golang.org/api v0.3.2
+	google.golang.org/appengine v1.4.0
+	google.golang.org/genproto v0.0.0-20190307195333-5fe7a883aa19
+	google.golang.org/grpc v1.19.0
+	gopkg.in/go-playground/validator.v8 v8.18.2
+	gopkg.in/yaml.v2 v2.2.2
+)
