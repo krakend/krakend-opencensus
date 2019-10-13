@@ -5,5 +5,8 @@ go:
     - "1.12.x"
     - "1.11.x"
 
+env:
+    - GO111MODULE=on
+
 script:
     - make
