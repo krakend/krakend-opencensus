@@ -7,6 +7,7 @@ import (
 	"errors"
 	"sync"
 	"time"
+	"strings"
 
 	"github.com/devopsfaith/krakend/config"
 	"go.opencensus.io/plugin/ochttp"
@@ -85,6 +86,56 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 	c.setDefaultSampler(cfg.SampleRate)
 	c.setReportingPeriod(time.Duration(cfg.ReportingPeriod) * time.Second)
 
+	// modify metric tags
+	// ref: https://godoc.org/go.opencensus.io/plugin/ochttp#pkg-variables
+	for _, view := range vs {
+		// client metrics (method + statuscode tags are enabled by default)
+		if strings.Contains(view.Name, "http/client") {
+			// Host
+			if cfg.Exporters.Prometheus.HostTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientHost)
+			}
+
+			// Path
+			if cfg.Exporters.Prometheus.PathTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+			}
+
+			// Method
+			if cfg.Exporters.Prometheus.MethodTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientMethod)
+			}
+
+			// StatusCode
+			if cfg.Exporters.Prometheus.StatusCodeTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+			}
+		}
+
+		// server metrics
+		if strings.Contains(view.Name, "http/server") {
+			// Host
+			if cfg.Exporters.Prometheus.HostTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Host)
+			}
+
+			// Path
+			if cfg.Exporters.Prometheus.PathTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Path)
+			}
+
+			// Method
+			if cfg.Exporters.Prometheus.MethodTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Method)
+			}
+
+			// StatusCode
+			if cfg.Exporters.Prometheus.StatusCodeTag {
+				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.StatusCode)
+			}
+		}
+	}
+
 	return c.registerViews(vs...)
 }
 
@@ -114,8 +165,12 @@ type Config struct {
 			ServiceName string `json:"service_name"`
 		} `json:"jaeger"`
 		Prometheus *struct {
-			Namespace string `json:"namespace"`
-			Port      int    `json:"port"`
+			Namespace     string `json:"namespace"`
+			Port          int    `json:"port"`
+			HostTag       bool   `json:"tag_host"`
+			PathTag       bool   `json:"tag_path"`
+			MethodTag     bool   `json:"tag_method"`
+			StatusCodeTag bool   `json:"tag_statuscode"`
 		} `json:"prometheus"`
 		Logger *struct{} `json:"logger"`
 		Xray   *struct {
