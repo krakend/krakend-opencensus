@@ -48,7 +48,11 @@
                     "service_name": "krakend"
                 },
                 "prometheus": {
-                    "port": 9091
+                    "port": 9091,
+                    "tag_host": true,
+                    "tag_path": true,
+                    "tag_method": true,
+                    "tag_statuscode": true
                 },
                 "jaeger": {
                     "endpoint": "http://192.168.99.100:14268",

@@ -88,50 +88,52 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 
 	// modify metric tags
 	// ref: https://godoc.org/go.opencensus.io/plugin/ochttp#pkg-variables
-	for _, view := range vs {
-		// client metrics (method + statuscode tags are enabled by default)
-		if strings.Contains(view.Name, "http/client") {
-			// Host
-			if cfg.Exporters.Prometheus.HostTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientHost)
+	if cfg.Exporters.Prometheus != nil {
+		for _, view := range vs {
+			// client metrics (method + statuscode tags are enabled by default)
+			if strings.Contains(view.Name, "http/client") {
+				// Host
+				if cfg.Exporters.Prometheus.HostTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientHost)
+				}
+
+				// Path
+				if cfg.Exporters.Prometheus.PathTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+				}
+
+				// Method
+				if cfg.Exporters.Prometheus.MethodTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientMethod)
+				}
+
+				// StatusCode
+				if cfg.Exporters.Prometheus.StatusCodeTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+				}
 			}
 
-			// Path
-			if cfg.Exporters.Prometheus.PathTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
-			}
+			// server metrics
+			if strings.Contains(view.Name, "http/server") {
+				// Host
+				if cfg.Exporters.Prometheus.HostTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Host)
+				}
 
-			// Method
-			if cfg.Exporters.Prometheus.MethodTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientMethod)
-			}
+				// Path
+				if cfg.Exporters.Prometheus.PathTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Path)
+				}
 
-			// StatusCode
-			if cfg.Exporters.Prometheus.StatusCodeTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
-			}
-		}
+				// Method
+				if cfg.Exporters.Prometheus.MethodTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Method)
+				}
 
-		// server metrics
-		if strings.Contains(view.Name, "http/server") {
-			// Host
-			if cfg.Exporters.Prometheus.HostTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Host)
-			}
-
-			// Path
-			if cfg.Exporters.Prometheus.PathTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Path)
-			}
-
-			// Method
-			if cfg.Exporters.Prometheus.MethodTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Method)
-			}
-
-			// StatusCode
-			if cfg.Exporters.Prometheus.StatusCodeTag {
-				view.TagKeys = appendIfMissing(view.TagKeys, ochttp.StatusCode)
+				// StatusCode
+				if cfg.Exporters.Prometheus.StatusCodeTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.StatusCode)
+				}
 			}
 		}
 	}
