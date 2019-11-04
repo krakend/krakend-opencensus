@@ -109,7 +109,7 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 
 				// StatusCode
 				if cfg.Exporters.Prometheus.StatusCodeTag {
-					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientStatus)
 				}
 			}
 
