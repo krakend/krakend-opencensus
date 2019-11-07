@@ -35,7 +35,11 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 		Addr:    fmt.Sprintf(":%d", cfg.Exporters.Prometheus.Port),
 	}
 
-	go func() { log.Fatal(server.ListenAndServe()) }()
+	go func() {
+		if serverErr := server.ListenAndServe(); serverErr != http.ErrServerClosed {
+			log.Fatalf("prometheus exporter failed to ListenAndServe: %v", serverErr)
+		}
+	}()
 
 	go func() {
 		<-ctx.Done()
