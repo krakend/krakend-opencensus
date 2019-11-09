@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
 	"sync"
 	"time"
 	"strings"
@@ -190,6 +191,10 @@ type Config struct {
 	} `json:"exporters"`
 }
 
+type EndpointExtraConfig struct {
+	PathAggregation string `json:"path_aggregation"`
+}
+
 const (
 	ContextKey = "opencensus-request-span"
 	Namespace  = "github_com/devopsfaith/krakend-opencensus"
@@ -255,6 +260,43 @@ func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 		return nil, err
 	}
 	return cfg, nil
+}
+
+func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConfig, error) {
+	cfg := new(EndpointExtraConfig)
+	tmp, ok := endpointCfg.ExtraConfig[Namespace]
+	if !ok {
+		return nil, errNoExtraConfig
+	}
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(tmp)
+	if err := json.NewDecoder(buf).Decode(cfg); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+// GetAggregatedPathForMetrics does path aggregation to reduce path cardinality in the metrics
+func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) string {
+	aggregationMode := "endpoint"
+	endpointExtraCfg, endpointExtraCfgErr := parseEndpointConfig(cfg)
+	if endpointExtraCfgErr == nil {
+		aggregationMode = endpointExtraCfg.PathAggregation
+	}
+
+	if aggregationMode == "lastparam" {
+		// only aggregates the last section of the path if it is a parameter, will default to endpoint mode if the last part of the url is not a parameter (misconfiguration)
+		lastArgument := string(cfg.Endpoint[strings.LastIndex(cfg.Endpoint, ":"):])
+		if strings.HasPrefix(lastArgument, ":") {
+			// lastArgument is a parameter, aggregate and overwrite path
+			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1])+lastArgument
+		}
+	} else if aggregationMode == "off" {
+		// no aggregration (use with caution!)
+		return r.URL.Path
+	}
+
+	return cfg.Endpoint
 }
 
 func fromContext(ctx context.Context) *trace.Span {

@@ -39,7 +39,13 @@ func HandlerFunc(cfg *config.EndpointConfig, next gin.HandlerFunc, prop propagat
 		StartOptions: trace.StartOptions{
 			SpanKind: trace.SpanKindServer,
 		},
+		tags: []tagGenerator{
+			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyServerRoute, cfg.Endpoint) },
+			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Host, r.URL.Host) },
+            func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Method, r.Method) },
+        },
 	}
+	h.tags = append(h.tags, func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Path, opencensus.GetAggregatedPathForMetrics(cfg, r)) })
 	return h.HandlerFunc
 }
 
@@ -49,7 +55,10 @@ type handler struct {
 	Handler          gin.HandlerFunc
 	StartOptions     trace.StartOptions
 	IsPublicEndpoint bool
+	tags             []tagGenerator
 }
+
+type tagGenerator func(*http.Request) tag.Mutator
 
 func (h *handler) HandlerFunc(c *gin.Context) {
 	var traceEnd, statsEnd func()
@@ -89,10 +98,11 @@ func (h *handler) extractSpanContext(r *http.Request) (trace.SpanContext, bool) 
 }
 
 func (h *handler) startStats(w gin.ResponseWriter, r *http.Request) (gin.ResponseWriter, func()) {
-	ctx, _ := tag.New(r.Context(),
-		tag.Upsert(ochttp.Host, r.URL.Host),
-		tag.Upsert(ochttp.Path, r.URL.Path),
-		tag.Upsert(ochttp.Method, r.Method))
+	tags := make([]tag.Mutator, len(h.tags))
+    for i, t := range h.tags {
+        tags[i] = t(r)
+    }
+    ctx, _ := tag.New(r.Context(), tags...)
 	track := &trackingResponseWriter{
 		start:          time.Now(),
 		ctx:            ctx,
