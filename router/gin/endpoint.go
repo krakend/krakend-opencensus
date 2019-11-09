@@ -89,7 +89,7 @@ func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Reque
 			})
 		}
 	}
-	span.AddAttributes(requestAttrs(r)...)
+	span.AddAttributes(opencensus.RequestAttrs(r)...)
 	return r.WithContext(ctx), span.End
 }
 
@@ -116,19 +116,4 @@ func (h *handler) startStats(w gin.ResponseWriter, r *http.Request) (gin.Respons
 	}
 	stats.Record(ctx, ochttp.ServerRequestCount.M(1))
 	return track, track.end
-}
-
-func requestAttrs(r *http.Request) []trace.Attribute {
-	return []trace.Attribute{
-		trace.StringAttribute(ochttp.PathAttribute, r.URL.Path),
-		trace.StringAttribute(ochttp.HostAttribute, r.URL.Host),
-		trace.StringAttribute(ochttp.MethodAttribute, r.Method),
-		trace.StringAttribute(ochttp.UserAgentAttribute, r.UserAgent()),
-	}
-}
-
-func responseAttrs(resp *http.Response) []trace.Attribute {
-	return []trace.Attribute{
-		trace.Int64Attribute(ochttp.StatusCodeAttribute, int64(resp.StatusCode)),
-	}
 }
