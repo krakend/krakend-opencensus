@@ -10,6 +10,7 @@ import (
 
 	"contrib.go.opencensus.io/exporter/prometheus"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
+	prom "github.com/prometheus/client_golang/prometheus"
 )
 
 func init() {
@@ -23,7 +24,17 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 		return nil, errDisabled
 	}
 
-	exporter, err := prometheus.NewExporter(prometheus.Options{Namespace: cfg.Exporters.Prometheus.Namespace})
+	prometheusRegistry := prom.NewRegistry()
+	err := prometheusRegistry.Register(prom.NewProcessCollector(prom.ProcessCollectorOpts{}))
+	if err != nil {
+		return nil, err
+	}
+	err = prometheusRegistry.Register(prom.NewGoCollector())
+	if err != nil {
+		return nil, err
+	}
+
+	exporter, err := prometheus.NewExporter(prometheus.Options{Namespace: cfg.Exporters.Prometheus.Namespace, Registry: prometheusRegistry})
 	if err != nil {
 		return exporter, err
 	}
