@@ -264,15 +264,16 @@
   version = "v0.1.0"
 
 [[projects]]
-  digest = "1:03bca087b180bf24c4f9060775f137775550a0834e18f0bca0520a868679dbd7"
+  digest = "1:3d7ad9c93ee2e43dc7dd48b76f96804c365be7fe30e75f7405028c4e633d189a"
   name = "github.com/prometheus/client_golang"
   packages = [
     "prometheus",
+    "prometheus/internal",
     "prometheus/promhttp",
   ]
   pruneopts = "NUT"
-  revision = "c5b7fccd204277076155f10851dad72b76a49317"
-  version = "v0.8.0"
+  revision = "2641b987480bca71fb39738eb8c8b0d577cb1d76"
+  version = "v0.9.4"
 
 [[projects]]
   branch = "master"
@@ -295,17 +296,16 @@
   revision = "d811d2e9bf898806ecfb6ef6296774b13ffc314c"
 
 [[projects]]
-  branch = "master"
-  digest = "1:c4a213a8d73fbb0b13f717ba7996116602ef18ecb42b91d77405877914cb0349"
+  digest = "1:750f966b1069df270b22a6440eb946eceaf5c2c0784f3f041359a9ceb637c25a"
   name = "github.com/prometheus/procfs"
   packages = [
     ".",
+    "internal/fs",
     "internal/util",
-    "nfs",
-    "xfs",
   ]
   pruneopts = "NUT"
-  revision = "8b1c2da0d56deffdbb9e48d4414b4e674bd8083e"
+  revision = "8a055596020d692cf491851e47ba3e302d9f90ce"
+  version = "v0.0.6"
 
 [[projects]]
   digest = "1:919fc2a81add8ac4a7a236dceaf3e4c29ba4df96d13c3f2ce13a4d0132ebefb8"
@@ -545,6 +545,7 @@
     "github.com/kpacha/opencensus-influxdb",
     "github.com/openzipkin/zipkin-go/model",
     "github.com/openzipkin/zipkin-go/reporter/http",
+    "github.com/prometheus/client_golang/prometheus",
     "go.opencensus.io/plugin/ochttp",
     "go.opencensus.io/plugin/ochttp/propagation/b3",
     "go.opencensus.io/stats",
