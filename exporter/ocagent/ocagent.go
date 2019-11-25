@@ -19,13 +19,6 @@ func init() {
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*ocagent.Exporter, error) {
 
-	// + Address            string            `json:"address"`
-	// + ServiceName        string            `json:"service_name"`
-	// + Headers            map[string]string `json:"headers"`
-	// + Insecure           bool              `json:"insecure"`
-	// Reconnection       string            `json:"reconnection"`
-	// + EnaableCompression bool              `json:"enable_compression"`
-
 	options := []ocagent.ExporterOption{}
 	if cfg.Exporters.Ocagent == nil {
 		return nil, errors.New("ocagent exporter disabled")
