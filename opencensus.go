@@ -100,7 +100,17 @@ type Config struct {
 		Logger      *struct{}          `json:"logger"`
 		Xray        *XrayConfig        `json:"xray"`
 		Stackdriver *StackdriverConfig `json:"stackdriver"`
+		Ocagent     *Ocagent           `json:"ocagent"`
 	} `json:"exporters"`
+}
+
+type Ocagent struct {
+	Address            string            `json:"address"`
+	ServiceName        string            `json:"service_name"`
+	Headers            map[string]string `json:"headers"`
+	Insecure           bool              `json:"insecure"`
+	Reconnection       string            `json:"reconnection"`
+	EnaableCompression bool              `json:"enable_compression"`
 }
 
 type InfluxDBConfig struct {
