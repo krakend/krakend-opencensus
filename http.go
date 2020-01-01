@@ -35,7 +35,18 @@ func HTTPRequestExecutor(clientFactory transport.HTTPClientFactory, cfg *config.
 			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Method, req.Method) },
 		}
 		client := clientFactory(ctx)
-		client.Transport = &Transport{Base: client.Transport, tags: tags}
+		client := clientFactory(ctx)
+		if _, ok := client.Transport.(*Transport); !ok {
+			tags := []tagGenerator{
+ 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientHost, req.Host) },
+ 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Host, req.Host) },
+ 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientPath, GetAggregatedPathForBackendMetrics(cfg, req)) },
+	 			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Path, GetAggregatedPathForBackendMetrics(cfg, req)) },
+ 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientMethod, req.Method) },
+ 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Method, req.Method) },
+ 			}
+			client.Transport = &Transport{Base: client.Transport, tags: tags}
+		}
 		return client.Do(req.WithContext(trace.NewContext(ctx, fromContext(ctx))))
 	}
 }
