@@ -1,5 +1,3 @@
-OS := $(shell uname | tr '[:upper:]' '[:lower:]')
-
 all: deps test
 
 deps:
