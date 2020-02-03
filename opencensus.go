@@ -93,44 +93,56 @@ type Config struct {
 	ReportingPeriod int            `json:"reporting_period"`
 	EnabledLayers   *EnabledLayers `json:"enabled_layers"`
 	Exporters       struct {
-		InfluxDB *struct {
-			Address      string `json:"address"`
-			Username     string `json:"username"`
-			Password     string `json:"password"`
-			Timeout      string `json:"timeout"`
-			PingEnabled  bool   `json:"ping"`
-			Database     string `json:"db"`
-			InstanceName string `json:"service_name"`
-			BufferSize   int    `json:"buffer_size"`
-		} `json:"influxdb"`
-		Zipkin *struct {
-			CollectorURL string `json:"collector_url"`
-			ServiceName  string `json:"service_name"`
-			IP           string `json:"ip"`
-			Port         int    `json:"port"`
-		} `json:"zipkin"`
-		Jaeger *struct {
-			Endpoint    string `json:"endpoint"`
-			ServiceName string `json:"service_name"`
-		} `json:"jaeger"`
-		Prometheus *struct {
-			Namespace string `json:"namespace"`
-			Port      int    `json:"port"`
-		} `json:"prometheus"`
-		Logger *struct{} `json:"logger"`
-		Xray   *struct {
-			UseEnv    bool   `json:"use_env"`
-			Region    string `json:"region"`
-			AccessKey string `json:"access_key_id"`
-			SecretKey string `json:"secret_access_key"`
-			Version   string `json:"version"`
-		} `json:"xray"`
-		Stackdriver *struct {
-			ProjectID     string            `json:"project_id"`
-			MetricPrefix  string            `json:"metric_prefix"`
-			DefaultLabels map[string]string `json:"default_labels"`
-		} `json:"stackdriver"`
+		InfluxDB    *InfluxDBConfig    `json:"influxdb"`
+		Zipkin      *ZipkinConfig      `json:"zipkin"`
+		Jaeger      *JaegerConfig      `json:"jaeger"`
+		Prometheus  *PrometheusConfig  `json:"prometheus"`
+		Logger      *struct{}          `json:"logger"`
+		Xray        *XrayConfig        `json:"xray"`
+		Stackdriver *StackdriverConfig `json:"stackdriver"`
 	} `json:"exporters"`
+}
+
+type InfluxDBConfig struct {
+	Address      string `json:"address"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	Timeout      string `json:"timeout"`
+	PingEnabled  bool   `json:"ping"`
+	Database     string `json:"db"`
+	InstanceName string `json:"service_name"`
+	BufferSize   int    `json:"buffer_size"`
+}
+
+type ZipkinConfig struct {
+	CollectorURL string `json:"collector_url"`
+	ServiceName  string `json:"service_name"`
+	IP           string `json:"ip"`
+	Port         int    `json:"port"`
+}
+
+type JaegerConfig struct {
+	Endpoint    string `json:"endpoint"`
+	ServiceName string `json:"service_name"`
+}
+
+type PrometheusConfig struct {
+	Namespace string `json:"namespace"`
+	Port      int    `json:"port"`
+}
+
+type XrayConfig struct {
+	UseEnv    bool   `json:"use_env"`
+	Region    string `json:"region"`
+	AccessKey string `json:"access_key_id"`
+	SecretKey string `json:"secret_access_key"`
+	Version   string `json:"version"`
+}
+
+type StackdriverConfig struct {
+	ProjectID     string            `json:"project_id"`
+	MetricPrefix  string            `json:"metric_prefix"`
+	DefaultLabels map[string]string `json:"default_labels"`
 }
 
 const (
