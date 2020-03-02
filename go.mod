@@ -15,6 +15,10 @@ require (
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.1.5-0.20170702092826-d459835d2b07
 	github.com/go-ini/ini v1.37.0 // indirect
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	github.com/golang/protobuf v1.3.4 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.13.0 // indirect
+	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/influxdata/influxdb v1.5.2 // indirect
 	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
 	github.com/mattn/go-isatty v0.0.3 // indirect
@@ -23,8 +27,12 @@ require (
 	github.com/prometheus/procfs v0.0.6 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/ugorji/go v1.1.1 // indirect
-	go.opencensus.io v0.22.0
-	google.golang.org/grpc v1.22.0
+	go.opencensus.io v0.22.3
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
+	golang.org/x/sys v0.0.0-20200302083256-062a44052db1 // indirect
+	google.golang.org/api v0.19.0 // indirect
+	google.golang.org/genproto v0.0.0-20200302123026-7795fca6ccb1 // indirect
+	google.golang.org/grpc v1.27.1
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
