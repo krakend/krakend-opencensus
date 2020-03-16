@@ -9,6 +9,8 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.0.0-20190424224027-f02a6e68f94d
 	contrib.go.opencensus.io/exporter/stackdriver v0.7.0
 	contrib.go.opencensus.io/exporter/zipkin v0.0.0-20190424224031-c96617f51dc6
+	github.com/DataDog/datadog-go v3.4.1+incompatible // indirect
+	github.com/DataDog/opencensus-go-exporter-datadog v0.0.0-20191210083620-6965a1cfed68
 	github.com/aws/aws-sdk-go v1.15.31
 	github.com/devopsfaith/flatmap v0.0.0-20190327225844-8d71d61e07ac // indirect
 	github.com/devopsfaith/krakend v0.0.0-20190404101742-1d20c1916774
@@ -23,9 +25,11 @@ require (
 	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
 	github.com/mattn/go-isatty v0.0.3 // indirect
 	github.com/openzipkin/zipkin-go v0.1.6
+	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/prometheus/client_golang v0.9.4
 	github.com/prometheus/procfs v0.0.6 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
+	github.com/tinylib/msgp v1.1.2 // indirect
 	github.com/ugorji/go v1.1.1 // indirect
 	go.opencensus.io v0.22.3
 	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
@@ -33,6 +37,7 @@ require (
 	google.golang.org/api v0.19.0 // indirect
 	google.golang.org/genproto v0.0.0-20200302123026-7795fca6ccb1 // indirect
 	google.golang.org/grpc v1.27.1
+	gopkg.in/DataDog/dd-trace-go.v1 v1.22.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
