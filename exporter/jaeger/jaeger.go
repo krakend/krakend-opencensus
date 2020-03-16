@@ -19,8 +19,10 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 		return nil, errDisabled
 	}
 	e, err := jaeger.NewExporter(jaeger.Options{
-		Endpoint:    cfg.Exporters.Jaeger.Endpoint,
-		ServiceName: cfg.Exporters.Jaeger.ServiceName,
+		CollectorEndpoint: cfg.Exporters.Jaeger.Endpoint,
+		Process: jaeger.Process{
+			ServiceName: cfg.Exporters.Jaeger.ServiceName,
+		},
 	})
 	if err != nil {
 		return e, err
