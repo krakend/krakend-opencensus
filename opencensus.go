@@ -92,16 +92,19 @@ type Config struct {
 	SampleRate      int            `json:"sample_rate"`
 	ReportingPeriod int            `json:"reporting_period"`
 	EnabledLayers   *EnabledLayers `json:"enabled_layers"`
-	Exporters       struct {
-		InfluxDB    *InfluxDBConfig    `json:"influxdb"`
-		Zipkin      *ZipkinConfig      `json:"zipkin"`
-		Jaeger      *JaegerConfig      `json:"jaeger"`
-		Prometheus  *PrometheusConfig  `json:"prometheus"`
-		Logger      *struct{}          `json:"logger"`
-		Xray        *XrayConfig        `json:"xray"`
-		Stackdriver *StackdriverConfig `json:"stackdriver"`
-		Ocagent     *OcagentConfig     `json:"ocagent"`
-	} `json:"exporters"`
+	Exporters       Exporters      `json:"exporters"`
+}
+
+type Exporters struct {
+	InfluxDB    *InfluxDBConfig    `json:"influxdb"`
+	Zipkin      *ZipkinConfig      `json:"zipkin"`
+	Jaeger      *JaegerConfig      `json:"jaeger"`
+	Prometheus  *PrometheusConfig  `json:"prometheus"`
+	Logger      *struct{}          `json:"logger"`
+	Xray        *XrayConfig        `json:"xray"`
+	Stackdriver *StackdriverConfig `json:"stackdriver"`
+	Ocagent     *OcagentConfig     `json:"ocagent"`
+	DataDog     *DataDogConfig     `json:"datadog"`
 }
 
 type InfluxDBConfig struct {
@@ -153,6 +156,16 @@ type OcagentConfig struct {
 	Insecure           bool              `json:"insecure"`
 	Reconnection       string            `json:"reconnection"`
 	EnaableCompression bool              `json:"enable_compression"`
+}
+
+type DataDogConfig struct {
+	Namespace              string                 `json:"namespace"`
+	Service                string                 `json:"service"`
+	TraceAddr              string                 `json:"trace_address"`
+	StatsAddr              string                 `json:"stats_address"`
+	Tags                   []string               `json:"tags"`
+	GlobalTags             map[string]interface{} `json:"global_tags"`
+	DisableCountPerBuckets bool                   `json:"disable_count_per_buckets"`
 }
 
 const (
