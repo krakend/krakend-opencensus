@@ -11,7 +11,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/devopsfaith/krakend-opencensus"
+	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/proxy"
 	"github.com/gin-gonic/gin"
@@ -42,7 +42,7 @@ func TestNew_post(t *testing.T) {
 	}
 
 	hf := New(func(_ *config.EndpointConfig, _ proxy.Proxy) gin.HandlerFunc {
-		return httpHandler(http.StatusOK, rand.Intn(512)+512)
+		return httpHandlerWithPropagation(http.StatusOK, rand.Intn(512)+512)
 	})
 
 	gin.SetMode(gin.TestMode)
@@ -56,6 +56,9 @@ func TestNew_post(t *testing.T) {
 		w := httptest.NewRecorder()
 		data := make([]byte, rand.Intn(1024))
 		req, err := http.NewRequest("POST", "/post", bytes.NewBuffer(data))
+		req.Header.Set("X-B3-SpanId", "48656c6c6f")
+		req.Header.Set("X-B3-TraceId", "5370616e")
+		req.Header.Set("X-B3-Sampled", "1")
 		if err != nil {
 			t.Error(err.Error())
 			return
@@ -148,9 +151,32 @@ func checkViews(t *testing.T, totalCount int, meanReqSize, meanRespSize float64)
 	}
 }
 
+func httpHandlerWithPropagation(statusCode, respSize int) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if c.Request.Header.Get("X-B3-SpanId") == "" {
+			c.Status(999)
+			return
+		}
+		if c.Request.Header.Get("X-B3-TraceId") == "" {
+			c.Status(999)
+			return
+		}
+		if c.Request.Header.Get("X-B3-Sampled") == "" {
+			c.Status(999)
+			return
+		}
+		c.Status(statusCode)
+		body := make([]byte, respSize)
+		c.Writer.Write(body)
+	}
+}
+
 func httpHandler(statusCode, respSize int) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Status(statusCode)
+		fmt.Println(c.Request.Header.Get("X-B3-SpanId"))
+		fmt.Println(c.Request.Header.Get("X-B3-TraceId"))
+		fmt.Println(c.Request.Header.Get("X-B3-Sampled"))
 		body := make([]byte, respSize)
 		c.Writer.Write(body)
 	}
