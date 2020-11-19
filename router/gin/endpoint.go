@@ -90,7 +90,7 @@ func (h *handler) extractSpanContext(r *http.Request) (trace.SpanContext, bool) 
 
 func (h *handler) startStats(w gin.ResponseWriter, r *http.Request) (gin.ResponseWriter, func()) {
 	ctx, _ := tag.New(r.Context(),
-		tag.Upsert(ochttp.Host, r.URL.Host),
+		tag.Upsert(ochttp.Host, r.Host),
 		tag.Upsert(ochttp.Path, r.URL.Path),
 		tag.Upsert(ochttp.Method, r.Method))
 	track := &trackingResponseWriter{
