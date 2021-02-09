@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
-	"strings"
 
 	"github.com/devopsfaith/krakend/config"
 	"go.opencensus.io/plugin/ochttp"
@@ -146,53 +146,88 @@ type Config struct {
 	SampleRate      int            `json:"sample_rate"`
 	ReportingPeriod int            `json:"reporting_period"`
 	EnabledLayers   *EnabledLayers `json:"enabled_layers"`
-	Exporters       struct {
-		InfluxDB *struct {
-			Address      string `json:"address"`
-			Username     string `json:"username"`
-			Password     string `json:"password"`
-			Timeout      string `json:"timeout"`
-			PingEnabled  bool   `json:"ping"`
-			Database     string `json:"db"`
-			InstanceName string `json:"service_name"`
-			BufferSize   int    `json:"buffer_size"`
-		} `json:"influxdb"`
-		Zipkin *struct {
-			CollectorURL string `json:"collector_url"`
-			ServiceName  string `json:"service_name"`
-			IP           string `json:"ip"`
-			Port         int    `json:"port"`
-		} `json:"zipkin"`
-		Jaeger *struct {
-			Endpoint    string `json:"endpoint"`
-			ServiceName string `json:"service_name"`
-		} `json:"jaeger"`
-		Prometheus *struct {
-			Namespace       string `json:"namespace"`
-			Port            int    `json:"port"`
-			HostTag         bool   `json:"tag_host"`
-			PathTag         bool   `json:"tag_path"`
-			MethodTag       bool   `json:"tag_method"`
-			StatusCodeTag   bool   `json:"tag_statuscode"`
-		} `json:"prometheus"`
-		Logger *struct{} `json:"logger"`
-		Xray   *struct {
-			UseEnv    bool   `json:"use_env"`
-			Region    string `json:"region"`
-			AccessKey string `json:"access_key_id"`
-			SecretKey string `json:"secret_access_key"`
-			Version   string `json:"version"`
-		} `json:"xray"`
-		Stackdriver *struct {
-			ProjectID     string            `json:"project_id"`
-			MetricPrefix  string            `json:"metric_prefix"`
-			DefaultLabels map[string]string `json:"default_labels"`
-		} `json:"stackdriver"`
-	} `json:"exporters"`
+	Exporters       Exporters      `json:"exporters"`
 }
 
 type EndpointExtraConfig struct {
 	PathAggregation string `json:"path_aggregation"`
+}
+
+type Exporters struct {
+	InfluxDB    *InfluxDBConfig    `json:"influxdb"`
+	Zipkin      *ZipkinConfig      `json:"zipkin"`
+	Jaeger      *JaegerConfig      `json:"jaeger"`
+	Prometheus  *PrometheusConfig  `json:"prometheus"`
+	Logger      *struct{}          `json:"logger"`
+	Xray        *XrayConfig        `json:"xray"`
+	Stackdriver *StackdriverConfig `json:"stackdriver"`
+	Ocagent     *OcagentConfig     `json:"ocagent"`
+	DataDog     *DataDogConfig     `json:"datadog"`
+}
+
+type InfluxDBConfig struct {
+	Address      string `json:"address"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	Timeout      string `json:"timeout"`
+	PingEnabled  bool   `json:"ping"`
+	Database     string `json:"db"`
+	InstanceName string `json:"service_name"`
+	BufferSize   int    `json:"buffer_size"`
+}
+
+type ZipkinConfig struct {
+	CollectorURL string `json:"collector_url"`
+	ServiceName  string `json:"service_name"`
+	IP           string `json:"ip"`
+	Port         int    `json:"port"`
+}
+
+type JaegerConfig struct {
+	Endpoint    string `json:"endpoint"`
+	ServiceName string `json:"service_name"`
+}
+
+type PrometheusConfig struct {
+	Namespace     string `json:"namespace"`
+	Port          int    `json:"port"`
+	HostTag       bool   `json:"tag_host"`
+	PathTag       bool   `json:"tag_path"`
+	MethodTag     bool   `json:"tag_method"`
+	StatusCodeTag bool   `json:"tag_statuscode"`
+}
+
+type XrayConfig struct {
+	UseEnv    bool   `json:"use_env"`
+	Region    string `json:"region"`
+	AccessKey string `json:"access_key_id"`
+	SecretKey string `json:"secret_access_key"`
+	Version   string `json:"version"`
+}
+
+type StackdriverConfig struct {
+	ProjectID     string            `json:"project_id"`
+	MetricPrefix  string            `json:"metric_prefix"`
+	DefaultLabels map[string]string `json:"default_labels"`
+}
+
+type OcagentConfig struct {
+	Address            string            `json:"address"`
+	ServiceName        string            `json:"service_name"`
+	Headers            map[string]string `json:"headers"`
+	Insecure           bool              `json:"insecure"`
+	Reconnection       string            `json:"reconnection"`
+	EnaableCompression bool              `json:"enable_compression"`
+}
+
+type DataDogConfig struct {
+	Namespace              string                 `json:"namespace"`
+	Service                string                 `json:"service"`
+	TraceAddr              string                 `json:"trace_address"`
+	StatsAddr              string                 `json:"stats_address"`
+	Tags                   []string               `json:"tags"`
+	GlobalTags             map[string]interface{} `json:"global_tags"`
+	DisableCountPerBuckets bool                   `json:"disable_count_per_buckets"`
 }
 
 const (
@@ -303,7 +338,7 @@ func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) st
 		lastArgument := string(cfg.Endpoint[strings.LastIndex(cfg.Endpoint, "/")+1:])
 		if strings.HasPrefix(lastArgument, ":") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1])+lastArgument
+			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)
@@ -320,13 +355,13 @@ func GetAggregatedPathForBackendMetrics(cfg *config.Backend, r *http.Request) st
 	if endpointExtraCfgErr == nil {
 		aggregationMode = endpointExtraCfg.PathAggregation
 	}
-	
+
 	if aggregationMode == "lastparam" {
 		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
 		lastArgument := string(cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:])
 		if strings.HasPrefix(lastArgument, ":") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1])+lastArgument
+			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)
