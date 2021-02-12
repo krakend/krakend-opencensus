@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -325,6 +326,9 @@ func parseBackendConfig(endpointCfg *config.Backend) (*EndpointExtraConfig, erro
 	return cfg, nil
 }
 
+var replaceMetricPath = regexp.MustCompile(`:([^\/]+)`)
+var replaceMetricBackendPath = regexp.MustCompile(`{{.(.*?)}}`)
+
 // GetAggregatedPathForMetrics does path aggregation to reduce path cardinality in the metrics
 func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) string {
 	aggregationMode := "pattern"
@@ -332,20 +336,24 @@ func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) st
 	if endpointExtraCfgErr == nil {
 		aggregationMode = endpointExtraCfg.PathAggregation
 	}
+	path := cfg.Endpoint
 
 	if aggregationMode == "lastparam" {
 		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
 		lastArgument := string(cfg.Endpoint[strings.LastIndex(cfg.Endpoint, "/")+1:])
 		if strings.HasPrefix(lastArgument, ":") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
+			path = string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)
-		return r.URL.Path
+		path = r.URL.Path
 	}
 
-	return cfg.Endpoint
+	// normalize path
+	path = strings.ToLower(replaceMetricPath.ReplaceAllString(path, `{$1}`))
+
+	return path
 }
 
 // GetAggregatedPathForBackendMetrics does path aggregation to reduce path cardinality in the metrics
@@ -355,20 +363,24 @@ func GetAggregatedPathForBackendMetrics(cfg *config.Backend, r *http.Request) st
 	if endpointExtraCfgErr == nil {
 		aggregationMode = endpointExtraCfg.PathAggregation
 	}
+	path := cfg.URLPattern
 
 	if aggregationMode == "lastparam" {
 		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
 		lastArgument := string(cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:])
 		if strings.HasPrefix(lastArgument, "{{.") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			return string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
+			path = string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)
-		return r.URL.Path
+		path = r.URL.Path
 	}
 
-	return cfg.URLPattern
+	// normalize path
+	path = strings.ToLower(replaceMetricBackendPath.ReplaceAllString(path, `{$1}`))
+
+	return path
 }
 
 func fromContext(ctx context.Context) *trace.Span {
