@@ -67,7 +67,7 @@ func main() {
 	}
 
 	bf := func(cfg *config.Backend) proxy.Proxy {
-		return proxy.NewHTTPProxyWithHTTPExecutor(cfg, opencensus.HTTPRequestExecutor(client.NewHTTPClient, cfg), cfg.Decoder)
+		return proxy.NewHTTPProxyWithHTTPExecutor(cfg, opencensus.HTTPRequestExecutorFromConfig(client.NewHTTPClient, cfg), cfg.Decoder)
 	}
 
 	// setup the krakend router
