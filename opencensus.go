@@ -340,10 +340,10 @@ func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) st
 
 	if aggregationMode == "lastparam" {
 		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
-		lastArgument := string(cfg.Endpoint[strings.LastIndex(cfg.Endpoint, "/")+1:])
+		lastArgument := cfg.Endpoint[strings.LastIndex(cfg.Endpoint, "/")+1:]
 		if strings.HasPrefix(lastArgument, ":") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			path = string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
+			path = r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1] + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)
@@ -358,6 +358,10 @@ func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) st
 
 // GetAggregatedPathForBackendMetrics does path aggregation to reduce path cardinality in the metrics
 func GetAggregatedPathForBackendMetrics(cfg *config.Backend, r *http.Request) string {
+	if cfg == nil {
+		return ""
+	}
+
 	aggregationMode := "pattern"
 	endpointExtraCfg, endpointExtraCfgErr := parseBackendConfig(cfg)
 	if endpointExtraCfgErr == nil {
@@ -367,10 +371,10 @@ func GetAggregatedPathForBackendMetrics(cfg *config.Backend, r *http.Request) st
 
 	if aggregationMode == "lastparam" {
 		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
-		lastArgument := string(cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:])
+		lastArgument := cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:]
 		if strings.HasPrefix(lastArgument, "{{.") {
 			// lastArgument is a parameter, aggregate and overwrite path
-			path = string(r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1]) + lastArgument
+			path = r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1] + lastArgument
 		}
 	} else if aggregationMode == "off" {
 		// no aggregration (use with caution!)

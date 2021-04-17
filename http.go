@@ -20,7 +20,11 @@ func NewHTTPClient(ctx context.Context) *http.Client {
 	return defaultClient
 }
 
-func HTTPRequestExecutor(clientFactory transport.HTTPClientFactory, cfg *config.Backend) transport.HTTPRequestExecutor {
+func HTTPRequestExecutor(clientFactory transport.HTTPClientFactory) transport.HTTPRequestExecutor {
+	return HTTPRequestExecutorFromConfig(clientFactory, nil)
+}
+
+func HTTPRequestExecutorFromConfig(clientFactory transport.HTTPClientFactory, cfg *config.Backend) transport.HTTPRequestExecutor {
 	if !IsBackendEnabled() {
 		return transport.DefaultHTTPRequestExecutor(clientFactory)
 	}
