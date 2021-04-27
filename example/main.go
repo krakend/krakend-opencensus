@@ -15,7 +15,7 @@ import (
 	"github.com/devopsfaith/krakend/transport/http/client"
 	"github.com/gin-gonic/gin"
 
-	"github.com/devopsfaith/krakend-opencensus"
+	opencensus "github.com/devopsfaith/krakend-opencensus"
 	"github.com/devopsfaith/krakend-opencensus/exporter"
 	_ "github.com/devopsfaith/krakend-opencensus/exporter/influxdb"
 	_ "github.com/devopsfaith/krakend-opencensus/exporter/jaeger"
@@ -67,7 +67,7 @@ func main() {
 	}
 
 	bf := func(cfg *config.Backend) proxy.Proxy {
-		return proxy.NewHTTPProxyWithHTTPExecutor(cfg, opencensus.HTTPRequestExecutor(client.NewHTTPClient), cfg.Decoder)
+		return proxy.NewHTTPProxyWithHTTPExecutor(cfg, opencensus.HTTPRequestExecutorFromConfig(client.NewHTTPClient, cfg), cfg.Decoder)
 	}
 
 	// setup the krakend router

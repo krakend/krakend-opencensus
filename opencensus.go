@@ -5,6 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -85,6 +88,58 @@ func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view
 	c.setDefaultSampler(cfg.SampleRate)
 	c.setReportingPeriod(time.Duration(cfg.ReportingPeriod) * time.Second)
 
+	// modify metric tags
+	// ref: https://godoc.org/go.opencensus.io/plugin/ochttp#pkg-variables
+	if cfg.Exporters.Prometheus != nil {
+		for _, view := range vs {
+			// client metrics (method + statuscode tags are enabled by default)
+			if strings.Contains(view.Name, "http/client") {
+				// Host
+				if cfg.Exporters.Prometheus.HostTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientHost)
+				}
+
+				// Path
+				if cfg.Exporters.Prometheus.PathTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientPath)
+				}
+
+				// Method
+				if cfg.Exporters.Prometheus.MethodTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientMethod)
+				}
+
+				// StatusCode
+				if cfg.Exporters.Prometheus.StatusCodeTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.KeyClientStatus)
+				}
+			}
+
+			// server metrics
+			if strings.Contains(view.Name, "http/server") {
+				// Host
+				if cfg.Exporters.Prometheus.HostTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Host)
+				}
+
+				// Path
+				if cfg.Exporters.Prometheus.PathTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Path)
+				}
+
+				// Method
+				if cfg.Exporters.Prometheus.MethodTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.Method)
+				}
+
+				// StatusCode
+				if cfg.Exporters.Prometheus.StatusCodeTag {
+					view.TagKeys = appendIfMissing(view.TagKeys, ochttp.StatusCode)
+				}
+			}
+		}
+	}
+
 	return c.registerViews(vs...)
 }
 
@@ -93,6 +148,10 @@ type Config struct {
 	ReportingPeriod int            `json:"reporting_period"`
 	EnabledLayers   *EnabledLayers `json:"enabled_layers"`
 	Exporters       Exporters      `json:"exporters"`
+}
+
+type EndpointExtraConfig struct {
+	PathAggregation string `json:"path_aggregation"`
 }
 
 type Exporters struct {
@@ -131,8 +190,12 @@ type JaegerConfig struct {
 }
 
 type PrometheusConfig struct {
-	Namespace string `json:"namespace"`
-	Port      int    `json:"port"`
+	Namespace     string `json:"namespace"`
+	Port          int    `json:"port"`
+	HostTag       bool   `json:"tag_host"`
+	PathTag       bool   `json:"tag_path"`
+	MethodTag     bool   `json:"tag_method"`
+	StatusCodeTag bool   `json:"tag_statuscode"`
 }
 
 type XrayConfig struct {
@@ -233,6 +296,95 @@ func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 		return nil, err
 	}
 	return cfg, nil
+}
+
+func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConfig, error) {
+	cfg := new(EndpointExtraConfig)
+	tmp, ok := endpointCfg.ExtraConfig[Namespace]
+	if !ok {
+		return nil, errNoExtraConfig
+	}
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(tmp)
+	if err := json.NewDecoder(buf).Decode(cfg); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+func parseBackendConfig(endpointCfg *config.Backend) (*EndpointExtraConfig, error) {
+	cfg := new(EndpointExtraConfig)
+	tmp, ok := endpointCfg.ExtraConfig[Namespace]
+	if !ok {
+		return nil, errNoExtraConfig
+	}
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(tmp)
+	if err := json.NewDecoder(buf).Decode(cfg); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+var replaceMetricPath = regexp.MustCompile(`:([^\/]+)`)
+var replaceMetricBackendPath = regexp.MustCompile(`{{.(.*?)}}`)
+
+// GetAggregatedPathForMetrics does path aggregation to reduce path cardinality in the metrics
+func GetAggregatedPathForMetrics(cfg *config.EndpointConfig, r *http.Request) string {
+	aggregationMode := "pattern"
+	endpointExtraCfg, endpointExtraCfgErr := parseEndpointConfig(cfg)
+	if endpointExtraCfgErr == nil {
+		aggregationMode = endpointExtraCfg.PathAggregation
+	}
+	path := cfg.Endpoint
+
+	if aggregationMode == "lastparam" {
+		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
+		lastArgument := cfg.Endpoint[strings.LastIndex(cfg.Endpoint, "/")+1:]
+		if strings.HasPrefix(lastArgument, ":") {
+			// lastArgument is a parameter, aggregate and overwrite path
+			path = r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1] + lastArgument
+		}
+	} else if aggregationMode == "off" {
+		// no aggregration (use with caution!)
+		path = r.URL.Path
+	}
+
+	// normalize path
+	path = strings.ToLower(replaceMetricPath.ReplaceAllString(path, `{$1}`))
+
+	return path
+}
+
+// GetAggregatedPathForBackendMetrics does path aggregation to reduce path cardinality in the metrics
+func GetAggregatedPathForBackendMetrics(cfg *config.Backend, r *http.Request) string {
+	if cfg == nil {
+		return ""
+	}
+
+	aggregationMode := "pattern"
+	endpointExtraCfg, endpointExtraCfgErr := parseBackendConfig(cfg)
+	if endpointExtraCfgErr == nil {
+		aggregationMode = endpointExtraCfg.PathAggregation
+	}
+	path := cfg.URLPattern
+
+	if aggregationMode == "lastparam" {
+		// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
+		lastArgument := cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:]
+		if strings.HasPrefix(lastArgument, "{{.") {
+			// lastArgument is a parameter, aggregate and overwrite path
+			path = r.URL.Path[0:strings.LastIndex(r.URL.Path, "/")+1] + lastArgument
+		}
+	} else if aggregationMode == "off" {
+		// no aggregration (use with caution!)
+		path = r.URL.Path
+	}
+
+	// normalize path
+	path = strings.ToLower(replaceMetricBackendPath.ReplaceAllString(path, `{$1}`))
+
+	return path
 }
 
 func fromContext(ctx context.Context) *trace.Span {
