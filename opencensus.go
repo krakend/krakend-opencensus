@@ -375,7 +375,8 @@ func GetAggregatedPathForBackendMetrics(cfg *config.Backend) func(r *http.Reques
 
 	if aggregationMode == "lastparam" {
 		return func(r *http.Request) string {
-			// only aggregates the last section of the path if it is a parameter, will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
+			// only aggregates the last section of the path if it is a parameter,
+			// will default to pattern mode if the last part of the url is not a parameter (misconfiguration)
 			lastArgument := cfg.URLPattern[strings.LastIndex(cfg.URLPattern, "/")+1:]
 			if len(lastArgument) > 3 && lastArgument[:3] == `{{.` {
 				// lastArgument is a parameter, aggregate and overwrite path
