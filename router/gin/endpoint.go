@@ -32,6 +32,7 @@ func HandlerFunc(cfg *config.EndpointConfig, next gin.HandlerFunc, prop propagat
 	if prop == nil {
 		prop = &b3.HTTPFormat{}
 	}
+	pathExtractor := opencensus.GetAggregatedPathForMetrics(cfg)
 	h := &handler{
 		name:        cfg.Endpoint,
 		propagation: prop,
@@ -43,11 +44,9 @@ func HandlerFunc(cfg *config.EndpointConfig, next gin.HandlerFunc, prop propagat
 			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyServerRoute, cfg.Endpoint) },
 			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Host, r.Host) },
 			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Method, r.Method) },
+			func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Path, pathExtractor(r)) },
 		},
 	}
-	h.tags = append(h.tags, func(r *http.Request) tag.Mutator {
-		return tag.Upsert(ochttp.Path, opencensus.GetAggregatedPathForMetrics(cfg, r))
-	})
 	return h.HandlerFunc
 }
 
@@ -78,10 +77,23 @@ func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Reque
 	ctx := r.Context()
 	var span *trace.Span
 	sc, ok := h.extractSpanContext(r)
+
 	if ok && !h.IsPublicEndpoint {
-		ctx, span = trace.StartSpanWithRemoteParent(ctx, h.name, sc, trace.WithSampler(h.StartOptions.Sampler), trace.WithSpanKind(h.StartOptions.SpanKind))
+		ctx, span = trace.StartSpanWithRemoteParent(
+			ctx,
+			h.name,
+			sc,
+			trace.WithSampler(h.StartOptions.Sampler),
+			trace.WithSpanKind(h.StartOptions.SpanKind),
+		)
 	} else {
-		ctx, span = trace.StartSpan(ctx, h.name, trace.WithSampler(h.StartOptions.Sampler), trace.WithSpanKind(h.StartOptions.SpanKind))
+		ctx, span = trace.StartSpan(
+			ctx,
+			h.name,
+			trace.WithSampler(h.StartOptions.Sampler),
+			trace.WithSpanKind(h.StartOptions.SpanKind),
+		)
+
 		if ok {
 			span.AddLink(trace.Link{
 				TraceID:    sc.TraceID,
@@ -91,6 +103,7 @@ func (h *handler) startTrace(_ gin.ResponseWriter, r *http.Request) (*http.Reque
 			})
 		}
 	}
+
 	span.AddAttributes(opencensus.RequestAttrs(r)...)
 	return r.WithContext(ctx), span.End
 }
