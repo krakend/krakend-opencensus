@@ -21,8 +21,9 @@ func New(hf mux.HandlerFactory) mux.HandlerFactory {
 }
 
 func tagAggregationMiddleware(next http.Handler, cfg *config.EndpointConfig) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ochttp.SetRoute(r.Context(), opencensus.GetAggregatedPathForMetrics(cfg, r))
+	pathExtractor := opencensus.GetAggregatedPathForMetrics(cfg)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ochttp.SetRoute(r.Context(), pathExtractor(r))
 		next.ServeHTTP(w, r)
-    })
+	})
 }

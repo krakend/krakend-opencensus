@@ -28,20 +28,14 @@ func HTTPRequestExecutorFromConfig(clientFactory transport.HTTPClientFactory, cf
 	if !IsBackendEnabled() {
 		return transport.DefaultHTTPRequestExecutor(clientFactory)
 	}
+	pathExtractor := GetAggregatedPathForBackendMetrics(cfg)
 	return func(ctx context.Context, req *http.Request) (*http.Response, error) {
 		client := clientFactory(ctx)
 		if _, ok := client.Transport.(*Transport); !ok {
 			tags := []tagGenerator{
 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientHost, req.Host) },
-				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Host, req.Host) },
-				func(r *http.Request) tag.Mutator {
-					return tag.Upsert(ochttp.KeyClientPath, GetAggregatedPathForBackendMetrics(cfg, req))
-				},
-				func(r *http.Request) tag.Mutator {
-					return tag.Upsert(ochttp.Path, GetAggregatedPathForBackendMetrics(cfg, req))
-				},
+				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientPath, pathExtractor(r)) },
 				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.KeyClientMethod, req.Method) },
-				func(r *http.Request) tag.Mutator { return tag.Upsert(ochttp.Method, req.Method) },
 			}
 			client.Transport = &Transport{Base: client.Transport, tags: tags}
 		}

@@ -11,6 +11,7 @@ import (
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/logging"
 	"github.com/devopsfaith/krakend/proxy"
+	"github.com/devopsfaith/krakend/router"
 	krakendgin "github.com/devopsfaith/krakend/router/gin"
 	"github.com/devopsfaith/krakend/transport/http/client"
 	"github.com/gin-gonic/gin"
@@ -77,6 +78,7 @@ func main() {
 		Middlewares:    []gin.HandlerFunc{},
 		Logger:         logger,
 		HandlerFactory: opencensusgin.New(krakendgin.EndpointHandler),
+		RunServer:      router.RunServer,
 	})
 
 	// start the engine
