@@ -300,7 +300,7 @@ func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 
 func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConfig, error) {
 	cfg := new(EndpointExtraConfig)
-	if endpointCfg == nil && endpointCfg.ExtraConfig == nil {
+	if endpointCfg == nil || endpointCfg.ExtraConfig == nil {
 		return nil, errNoExtraConfig
 	}
 	tmp, ok := endpointCfg.ExtraConfig[Namespace]
@@ -317,7 +317,7 @@ func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConf
 
 func parseBackendConfig(backendCfg *config.Backend) (*EndpointExtraConfig, error) {
 	cfg := new(EndpointExtraConfig)
-	if backendCfg == nil && backendCfg.ExtraConfig == nil {
+	if backendCfg == nil || backendCfg.ExtraConfig == nil {
 		return nil, errNoExtraConfig
 	}
 	tmp, ok := backendCfg.ExtraConfig[Namespace]
