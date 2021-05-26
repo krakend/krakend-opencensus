@@ -12,8 +12,6 @@ require (
 	github.com/DataDog/datadog-go v3.4.1+incompatible // indirect
 	github.com/DataDog/opencensus-go-exporter-datadog v0.0.0-20191210083620-6965a1cfed68
 	github.com/aws/aws-sdk-go v1.15.31
-	github.com/devopsfaith/flatmap v0.0.0-20190327225844-8d71d61e07ac // indirect
-	github.com/devopsfaith/krakend v0.0.0-20190404101742-1d20c1916774
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.1.5-0.20170702092826-d459835d2b07
 	github.com/go-ini/ini v1.37.0 // indirect
@@ -23,6 +21,7 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/influxdata/influxdb v1.5.2 // indirect
 	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
+	github.com/luraproject/lura v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.3 // indirect
 	github.com/openzipkin/zipkin-go v0.1.6
 	github.com/philhofer/fwd v1.0.0 // indirect
