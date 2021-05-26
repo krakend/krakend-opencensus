@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/devopsfaith/krakend/config"
+	"github.com/luraproject/lura/config"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"

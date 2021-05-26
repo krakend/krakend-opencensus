@@ -4,7 +4,7 @@ import (
 	"context"
 
 	opencensus "github.com/devopsfaith/krakend-opencensus"
-	"github.com/devopsfaith/krakend/logging"
+	"github.com/luraproject/lura/logging"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 )
