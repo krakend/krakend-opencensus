@@ -9,15 +9,15 @@ import (
 
 func TestGetAggregatedPathForMetrics(t *testing.T) {
 	for i, tc := range []struct {
-		cfg      config.EndpointConfig
+		cfg      *config.EndpointConfig
 		expected string
 	}{
 		{
-			cfg:      config.EndpointConfig{Endpoint: "/api/:foo/:bar"},
+			cfg:      &config.EndpointConfig{Endpoint: "/api/:foo/:bar"},
 			expected: "/api/{foo}/{bar}",
 		},
 		{
-			cfg: config.EndpointConfig{
+			cfg: &config.EndpointConfig{
 				Endpoint: "/api/:foo/:bar",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "pattern"},
@@ -26,7 +26,7 @@ func TestGetAggregatedPathForMetrics(t *testing.T) {
 			expected: "/api/{foo}/{bar}",
 		},
 		{
-			cfg: config.EndpointConfig{
+			cfg: &config.EndpointConfig{
 				Endpoint: "/api/:foo/:bar",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "lastparam"},
@@ -35,7 +35,7 @@ func TestGetAggregatedPathForMetrics(t *testing.T) {
 			expected: "/api/foo/{bar}",
 		},
 		{
-			cfg: config.EndpointConfig{
+			cfg: &config.EndpointConfig{
 				Endpoint: "/api/:foo/:bar",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "off"},
@@ -43,8 +43,11 @@ func TestGetAggregatedPathForMetrics(t *testing.T) {
 			},
 			expected: "/api/foo/bar",
 		},
+		{
+			expected: "/api/foo/bar",
+		},
 	} {
-		extractor := GetAggregatedPathForMetrics(&tc.cfg)
+		extractor := GetAggregatedPathForMetrics(tc.cfg)
 		r, _ := http.NewRequest("GET", "http://example.tld/api/foo/bar", nil)
 		if tag := extractor(r); tag != tc.expected {
 			t.Errorf("tc-%d: unexpected result: %s", i, tag)
@@ -54,15 +57,15 @@ func TestGetAggregatedPathForMetrics(t *testing.T) {
 
 func TestGetAggregatedPathForBackendMetrics(t *testing.T) {
 	for i, tc := range []struct {
-		cfg      config.Backend
+		cfg      *config.Backend
 		expected string
 	}{
 		{
-			cfg:      config.Backend{URLPattern: "/api/{{.Foo}}/{{.Bar}}"},
+			cfg:      &config.Backend{URLPattern: "/api/{{.Foo}}/{{.Bar}}"},
 			expected: "/api/{foo}/{bar}",
 		},
 		{
-			cfg: config.Backend{
+			cfg: &config.Backend{
 				URLPattern: "/api/{{.Foo}}/{{.Bar}}",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "pattern"},
@@ -71,7 +74,7 @@ func TestGetAggregatedPathForBackendMetrics(t *testing.T) {
 			expected: "/api/{foo}/{bar}",
 		},
 		{
-			cfg: config.Backend{
+			cfg: &config.Backend{
 				URLPattern: "/api/{{.Foo}}/{{.Bar}}",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "lastparam"},
@@ -80,7 +83,7 @@ func TestGetAggregatedPathForBackendMetrics(t *testing.T) {
 			expected: "/api/foo/{bar}",
 		},
 		{
-			cfg: config.Backend{
+			cfg: &config.Backend{
 				URLPattern: "/api/{{.Foo}}/{{.Bar}}",
 				ExtraConfig: config.ExtraConfig{
 					Namespace: map[string]interface{}{"path_aggregation": "off"},
@@ -88,8 +91,11 @@ func TestGetAggregatedPathForBackendMetrics(t *testing.T) {
 			},
 			expected: "/api/foo/bar",
 		},
+		{
+			expected: "/api/foo/bar",
+		},
 	} {
-		extractor := GetAggregatedPathForBackendMetrics(&tc.cfg)
+		extractor := GetAggregatedPathForBackendMetrics(tc.cfg)
 		r, _ := http.NewRequest("GET", "http://example.tld/api/foo/bar", nil)
 		if tag := extractor(r); tag != tc.expected {
 			t.Errorf("tc-%d: unexpected result: %s", i, tag)

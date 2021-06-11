@@ -337,6 +337,10 @@ var replaceMetricBackendPath = regexp.MustCompile(`{{.(.*?)}}`)
 
 // GetAggregatedPathForMetrics returns a path aggregator function ready to reduce path cardinality in the metrics
 func GetAggregatedPathForMetrics(cfg *config.EndpointConfig) func(r *http.Request) string {
+	if cfg == nil {
+		return simplePathExtractor
+	}
+
 	aggregationMode := aggregationModePattern
 	endpointExtraCfg, endpointExtraCfgErr := parseEndpointConfig(cfg)
 	if endpointExtraCfgErr == nil {
@@ -367,6 +371,9 @@ func GetAggregatedPathForMetrics(cfg *config.EndpointConfig) func(r *http.Reques
 
 // GetAggregatedPathForBackendMetrics returns a path aggregator function ready to reduce path cardinality in the metrics
 func GetAggregatedPathForBackendMetrics(cfg *config.Backend) func(r *http.Request) string {
+	if cfg == nil {
+		return simplePathExtractor
+	}
 	aggregationMode := aggregationModePattern
 	endpointExtraCfg, endpointExtraCfgErr := parseBackendConfig(cfg)
 	if endpointExtraCfgErr == nil {
