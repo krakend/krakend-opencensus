@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"contrib.go.opencensus.io/exporter/stackdriver"
+	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
 	opencensus "github.com/devopsfaith/krakend-opencensus"
 )
 
@@ -36,5 +37,6 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*stackdriver.Exporter
 		BundleDelayThreshold:    time.Duration(cfg.ReportingPeriod) * time.Second,
 		BundleCountThreshold:    cfg.SampleRate,
 		DefaultMonitoringLabels: labels,
+		MonitoredResource:       monitoredresource.Autodetect(),
 	})
 }
