@@ -185,8 +185,9 @@ type ZipkinConfig struct {
 }
 
 type JaegerConfig struct {
-	Endpoint    string `json:"endpoint"`
-	ServiceName string `json:"service_name"`
+	Endpoint       string `json:"endpoint"`
+	ServiceName    string `json:"service_name"`
+	BufferMaxCount int    `json:"buffermaxcount"`
 }
 
 type PrometheusConfig struct {
