@@ -12,23 +12,19 @@ require (
 	github.com/DataDog/datadog-go v3.4.1+incompatible // indirect
 	github.com/DataDog/opencensus-go-exporter-datadog v0.0.0-20191210083620-6965a1cfed68
 	github.com/aws/aws-sdk-go v1.15.31
-	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.1.5-0.20170702092826-d459835d2b07
 	github.com/go-ini/ini v1.37.0 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.3.4 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.13.0 // indirect
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/influxdata/influxdb v1.5.2 // indirect
 	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
-	github.com/luraproject/lura v1.4.0 // indirect
-	github.com/mattn/go-isatty v0.0.3 // indirect
+	github.com/luraproject/lura v1.4.0
+	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0
 	github.com/openzipkin/zipkin-go v0.1.6
 	github.com/philhofer/fwd v1.0.0 // indirect
 	github.com/prometheus/client_golang v0.9.4
 	github.com/prometheus/procfs v0.0.6 // indirect
-	github.com/shurcooL/go v0.0.0-20191216061654-b114cc39af9f // indirect
-	github.com/shurcooL/go-goon v0.0.0-20170922171312-37c2f522c041 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/tinylib/msgp v1.1.2 // indirect
 	github.com/ugorji/go v1.1.1 // indirect
@@ -39,7 +35,5 @@ require (
 	google.golang.org/genproto v0.0.0-20200302123026-7795fca6ccb1 // indirect
 	google.golang.org/grpc v1.27.1
 	gopkg.in/DataDog/dd-trace-go.v1 v1.22.0 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
-	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
 )

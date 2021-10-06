@@ -164,6 +164,7 @@ type Exporters struct {
 	Stackdriver *StackdriverConfig `json:"stackdriver"`
 	Ocagent     *OcagentConfig     `json:"ocagent"`
 	DataDog     *DataDogConfig     `json:"datadog"`
+	NewRelic    *NewRelicConfig    `json:"newrelic"`
 }
 
 type InfluxDBConfig struct {
@@ -229,6 +230,11 @@ type DataDogConfig struct {
 	Tags                   []string               `json:"tags"`
 	GlobalTags             map[string]interface{} `json:"global_tags"`
 	DisableCountPerBuckets bool                   `json:"disable_count_per_buckets"`
+}
+
+type NewRelicConfig struct{
+	ServiceName            string `json:"service_name"`
+	NewRelicInsightsApiKey string `json:"new_relic_insights_api_key"`
 }
 
 const (
