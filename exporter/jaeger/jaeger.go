@@ -20,6 +20,7 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 	}
 	e, err := jaeger.NewExporter(jaeger.Options{
 		CollectorEndpoint: cfg.Exporters.Jaeger.Endpoint,
+		BufferMaxCount:    cfg.Exporters.Jaeger.BufferMaxCount,
 		Process: jaeger.Process{
 			ServiceName: cfg.Exporters.Jaeger.ServiceName,
 		},
