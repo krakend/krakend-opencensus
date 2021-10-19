@@ -48,7 +48,7 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 
 	go func() {
 		if serverErr := server.ListenAndServe(); serverErr != http.ErrServerClosed {
-			log.Fatalf("prometheus exporter failed to ListenAndServe: %v", serverErr)
+			log.Fatalf("[SERVICE: Opencensus] The Prometheus exporter failed to listen and serve: %v", serverErr)
 		}
 	}()
 
