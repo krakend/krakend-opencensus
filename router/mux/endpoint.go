@@ -3,10 +3,10 @@ package mux
 import (
 	"net/http"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus"
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
-	"github.com/luraproject/lura/router/mux"
+	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
+	"github.com/luraproject/lura/v2/router/mux"
 	"go.opencensus.io/plugin/ochttp"
 )
 

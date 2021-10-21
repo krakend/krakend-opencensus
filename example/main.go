@@ -9,20 +9,20 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/logging"
-	"github.com/luraproject/lura/proxy"
-	"github.com/luraproject/lura/router"
-	krakendgin "github.com/luraproject/lura/router/gin"
-	"github.com/luraproject/lura/transport/http/client"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/logging"
+	"github.com/luraproject/lura/v2/proxy"
+	krakendgin "github.com/luraproject/lura/v2/router/gin"
+	"github.com/luraproject/lura/v2/transport/http/client"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus"
-	"github.com/devopsfaith/krakend-opencensus/exporter"
-	_ "github.com/devopsfaith/krakend-opencensus/exporter/influxdb"
-	_ "github.com/devopsfaith/krakend-opencensus/exporter/jaeger"
-	_ "github.com/devopsfaith/krakend-opencensus/exporter/prometheus"
-	_ "github.com/devopsfaith/krakend-opencensus/exporter/zipkin"
-	opencensusgin "github.com/devopsfaith/krakend-opencensus/router/gin"
+	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
+	"github.com/devopsfaith/krakend-opencensus/v2/exporter"
+	_ "github.com/devopsfaith/krakend-opencensus/v2/exporter/influxdb"
+	_ "github.com/devopsfaith/krakend-opencensus/v2/exporter/jaeger"
+	_ "github.com/devopsfaith/krakend-opencensus/v2/exporter/prometheus"
+	_ "github.com/devopsfaith/krakend-opencensus/v2/exporter/zipkin"
+	opencensusgin "github.com/devopsfaith/krakend-opencensus/v2/router/gin"
+	"github.com/luraproject/lura/v2/transport/http/server"
 )
 
 func main() {
@@ -78,7 +78,7 @@ func main() {
 		Middlewares:    []gin.HandlerFunc{},
 		Logger:         logger,
 		HandlerFactory: opencensusgin.New(krakendgin.EndpointHandler),
-		RunServer:      router.RunServer,
+		RunServer:      server.RunServer,
 	})
 
 	// start the engine
