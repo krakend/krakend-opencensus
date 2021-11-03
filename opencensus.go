@@ -164,6 +164,7 @@ type Exporters struct {
 	Stackdriver *StackdriverConfig `json:"stackdriver"`
 	Ocagent     *OcagentConfig     `json:"ocagent"`
 	DataDog     *DataDogConfig     `json:"datadog"`
+	ExtraConfig config.ExtraConfig `json:"extra_config"`
 }
 
 type InfluxDBConfig struct {
