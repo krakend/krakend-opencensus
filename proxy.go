@@ -3,8 +3,8 @@ package opencensus
 import (
 	"context"
 
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
 	"go.opencensus.io/trace"
 )
 

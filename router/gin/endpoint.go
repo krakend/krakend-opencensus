@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/luraproject/lura/config"
-	"github.com/luraproject/lura/proxy"
-	krakendgin "github.com/luraproject/lura/router/gin"
+	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v2/proxy"
+	krakendgin "github.com/luraproject/lura/v2/router/gin"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/stats"
@@ -15,7 +15,7 @@ import (
 	"go.opencensus.io/trace"
 	"go.opencensus.io/trace/propagation"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus"
+	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
 )
 
 // New wraps a handler factory adding some simple instrumentation to the generated handlers

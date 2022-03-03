@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/luraproject/lura/config"
+	"github.com/luraproject/lura/v2/config"
 )
 
 func TestGetAggregatedPathForMetrics(t *testing.T) {

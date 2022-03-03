@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/luraproject/lura/config"
+	"github.com/luraproject/lura/v2/config"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
@@ -164,6 +164,7 @@ type Exporters struct {
 	Stackdriver *StackdriverConfig `json:"stackdriver"`
 	Ocagent     *OcagentConfig     `json:"ocagent"`
 	DataDog     *DataDogConfig     `json:"datadog"`
+	ExtraConfig config.ExtraConfig `json:"extra_config"`
 }
 
 type InfluxDBConfig struct {
@@ -253,7 +254,7 @@ var (
 	}
 
 	exporterFactories                     = []ExporterFactory{}
-	errNoExtraConfig                      = errors.New("no extra config defined for the opencensus module")
+	ErrNoConfig                           = errors.New("no extra config defined for the opencensus module")
 	errSingletonExporterFactoriesRegister = errors.New("expecting only one exporter factory registration per instance")
 	mu                                    = new(sync.RWMutex)
 	register                              = composableRegister{
@@ -289,7 +290,7 @@ func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 	cfg := new(Config)
 	tmp, ok := srvCfg.ExtraConfig[Namespace]
 	if !ok {
-		return nil, errNoExtraConfig
+		return nil, ErrNoConfig
 	}
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(tmp)
@@ -302,11 +303,11 @@ func parseCfg(srvCfg config.ServiceConfig) (*Config, error) {
 func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConfig, error) {
 	cfg := new(EndpointExtraConfig)
 	if endpointCfg == nil || endpointCfg.ExtraConfig == nil {
-		return nil, errNoExtraConfig
+		return nil, ErrNoConfig
 	}
 	tmp, ok := endpointCfg.ExtraConfig[Namespace]
 	if !ok {
-		return nil, errNoExtraConfig
+		return nil, ErrNoConfig
 	}
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(tmp)
@@ -319,11 +320,11 @@ func parseEndpointConfig(endpointCfg *config.EndpointConfig) (*EndpointExtraConf
 func parseBackendConfig(backendCfg *config.Backend) (*EndpointExtraConfig, error) {
 	cfg := new(EndpointExtraConfig)
 	if backendCfg == nil || backendCfg.ExtraConfig == nil {
-		return nil, errNoExtraConfig
+		return nil, ErrNoConfig
 	}
 	tmp, ok := backendCfg.ExtraConfig[Namespace]
 	if !ok {
-		return nil, errNoExtraConfig
+		return nil, ErrNoConfig
 	}
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(tmp)
