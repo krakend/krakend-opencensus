@@ -26,7 +26,7 @@ require (
 	github.com/apache/thrift v0.12.0 // indirect
 	github.com/beorn7/perks v1.0.0 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.2.1 // indirect
-	github.com/devopsfaith/flatmap v0.0.0-20200601181759-8521186182fc // indirect
+	github.com/krakendio/flatmap v0.0.0-20200601181759-8521186182fc // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-ini/ini v1.37.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
