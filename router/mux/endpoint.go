@@ -3,7 +3,7 @@ package mux
 import (
 	"net/http"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
+	opencensus "github.com/krakendio/krakend-opencensus/v2"
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 	"github.com/luraproject/lura/v2/router/mux"

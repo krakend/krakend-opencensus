@@ -1,4 +1,4 @@
-module github.com/devopsfaith/krakend-opencensus/v2
+module github.com/krakendio/krakend-opencensus/v2
 
 go 1.17
 
