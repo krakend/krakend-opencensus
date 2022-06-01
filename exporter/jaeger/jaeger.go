@@ -35,7 +35,6 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 	}()
 
 	return e, nil
-
 }
 
 var errDisabled = errors.New("opencensus jaeger exporter disabled")

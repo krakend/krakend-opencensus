@@ -25,7 +25,6 @@ func Middleware(name string) proxy.Middleware {
 			var span *trace.Span
 			ctx, span = trace.StartSpan(trace.NewContext(ctx, fromContext(ctx)), name)
 			resp, err := next[0](ctx, req)
-
 			if err != nil {
 				if err.Error() != errCtxCanceledMsg {
 					span.AddAttributes(trace.StringAttribute("error", err.Error()))
