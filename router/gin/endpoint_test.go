@@ -36,7 +36,6 @@ func init() {
 }
 
 func TestNew_post(t *testing.T) {
-
 	if err := view.Register(ochttp.DefaultServerViews...); err != nil {
 		t.Fatalf("Failed to register ochttp.DefaultServerViews error: %v", err)
 	}

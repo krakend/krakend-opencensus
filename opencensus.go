@@ -334,8 +334,10 @@ func parseBackendConfig(backendCfg *config.Backend) (*EndpointExtraConfig, error
 	return cfg, nil
 }
 
-var replaceMetricPath = regexp.MustCompile(`:([^\/]+)`)
-var replaceMetricBackendPath = regexp.MustCompile(`{{.(.*?)}}`)
+var (
+	replaceMetricPath        = regexp.MustCompile(`:([^\/]+)`)
+	replaceMetricBackendPath = regexp.MustCompile(`{{.(.*?)}}`)
+)
 
 // GetAggregatedPathForMetrics returns a path aggregator function ready to reduce path cardinality in the metrics
 func GetAggregatedPathForMetrics(cfg *config.EndpointConfig) func(r *http.Request) string {

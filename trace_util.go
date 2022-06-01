@@ -3,8 +3,8 @@ package opencensus
 import (
 	"net/http"
 
-	"go.opencensus.io/trace"
 	"go.opencensus.io/plugin/ochttp"
+	"go.opencensus.io/trace"
 )
 
 func SpanNameFromURL(req *http.Request) string {

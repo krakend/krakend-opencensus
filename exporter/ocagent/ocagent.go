@@ -19,7 +19,6 @@ func init() {
 }
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*ocagent.Exporter, error) {
-
 	options := []ocagent.ExporterOption{}
 	if cfg.Exporters.Ocagent == nil {
 		return nil, errors.New("ocagent exporter disabled")
