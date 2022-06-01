@@ -1,4 +1,3 @@
-
 // Copyright 2018, OpenCensus Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,19 +19,19 @@ package opencensus
 
 import (
 	"context"
+	"io"
 	"net/http"
 	"net/http/httptrace"
 	"strconv"
-	"io"
 	"sync"
 	"time"
 
 	"go.opencensus.io/plugin/ochttp"
-	"go.opencensus.io/trace"
-	"go.opencensus.io/trace/propagation"
 	"go.opencensus.io/plugin/ochttp/propagation/b3"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
+	"go.opencensus.io/trace"
+	"go.opencensus.io/trace/propagation"
 )
 
 var defaultFormat propagation.HTTPFormat = &b3.HTTPFormat{}
@@ -197,7 +196,7 @@ func (t *traceTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 // wrappedBody returns a wrapped version of the original
 // Body and only implements the same combination of additional
 // interfaces as the original.
-func wrappedBody(wrapper io.ReadCloser, body io.ReadCloser) io.ReadCloser {
+func wrappedBody(wrapper, body io.ReadCloser) io.ReadCloser {
 	var (
 		wr, i0 = body.(io.Writer)
 	)
@@ -316,7 +315,6 @@ func isHealthEndpoint(path string) bool {
 	}
 	return false
 }
-
 
 // statsTransport is an http.RoundTripper that collects stats for the outgoing requests.
 type statsTransport struct {
