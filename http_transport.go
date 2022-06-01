@@ -196,7 +196,7 @@ func (t *traceTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 // wrappedBody returns a wrapped version of the original
 // Body and only implements the same combination of additional
 // interfaces as the original.
-func wrappedBody(wrapper io.ReadCloser, body io.ReadCloser) io.ReadCloser {
+func wrappedBody(wrapper, body io.ReadCloser) io.ReadCloser {
 	wr, i0 := body.(io.Writer)
 	switch {
 	case !i0:
