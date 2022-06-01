@@ -59,12 +59,10 @@ func main() {
 	logger, _ := logging.NewLogger(*logLevel, os.Stdout, "[KRAKEND]")
 
 	// Register stats and trace exporters to export the collected data.
-	{
-		exporter.Register(logger)
 
-		if err := opencensus.Register(ctx, serviceConfig); err != nil {
-			log.Fatal(err)
-		}
+	exporter.Register(logger)
+	if err := opencensus.Register(ctx, serviceConfig); err != nil {
+		log.Fatal(err)
 	}
 
 	bf := func(cfg *config.Backend) proxy.Proxy {
