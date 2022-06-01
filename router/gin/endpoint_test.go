@@ -11,8 +11,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
 	"github.com/gin-gonic/gin"
+	opencensus "github.com/krakendio/krakend-opencensus/v2"
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
 	"go.opencensus.io/plugin/ochttp"

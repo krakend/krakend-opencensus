@@ -5,8 +5,8 @@ import (
 	"errors"
 	"time"
 
-	opencensus "github.com/devopsfaith/krakend-opencensus/v2"
 	"github.com/kpacha/opencensus-influxdb"
+	opencensus "github.com/krakendio/krakend-opencensus/v2"
 )
 
 func init() {
