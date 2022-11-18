@@ -67,5 +67,3 @@ require (
 	gopkg.in/ini.v1 v1.51.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/krakendio/krakend-opencensus/v2 v2.0.1 => github.com/CodyManshack-SAP/krakend-opencensus/v2 v2.0.2
