@@ -187,7 +187,7 @@ type ZipkinConfig struct {
 
 type JaegerConfig struct {
 	AgentEndpoint     string `json:"agent_endpoint"`
-	CollectorEndpoint string `json:"collector_endpoint"`
+	Endpoint          string `json:"endpoint"`
 	ServiceName       string `json:"service_name"`
 	BufferMaxCount    int    `json:"buffer_max_count"`
 }
