@@ -18,7 +18,7 @@ func init() {
 
 var defaultMetricPrefix = "krakend"
 
-func Exporter(ctx context.Context, cfg opencensus.Config) (*stackdriver.Exporter, error) {
+func Exporter(_ context.Context, cfg opencensus.Config) (*stackdriver.Exporter, error) {
 	if cfg.Exporters.Stackdriver == nil {
 		return nil, errors.New("stackdriver exporter disabled")
 	}

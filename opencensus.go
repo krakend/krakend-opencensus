@@ -80,7 +80,7 @@ func (c *composableRegister) ExporterFactories(ctx context.Context, cfg Config, 
 	c.traceExporter(traceExporters...)
 }
 
-func (c composableRegister) Register(ctx context.Context, cfg Config, vs []*view.View) error {
+func (c composableRegister) Register(_ context.Context, cfg Config, vs []*view.View) error {
 	if len(vs) == 0 {
 		vs = DefaultViews
 	}

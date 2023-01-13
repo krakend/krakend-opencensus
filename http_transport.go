@@ -255,7 +255,7 @@ func (bt *bodyTracker) Close() error {
 
 // TraceStatus is a utility to convert the HTTP status code to a trace.Status that
 // represents the outcome as closely as possible.
-func TraceStatus(httpStatusCode int, statusLine string) trace.Status {
+func TraceStatus(httpStatusCode int, _ string) trace.Status {
 	var code int32
 	if httpStatusCode < 200 || httpStatusCode >= 400 {
 		code = trace.StatusCodeUnknown
