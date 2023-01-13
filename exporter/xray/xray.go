@@ -19,7 +19,7 @@ func init() {
 	})
 }
 
-func Exporter(ctx context.Context, cfg opencensus.Config) (*ocAws.Exporter, error) {
+func Exporter(_ context.Context, cfg opencensus.Config) (*ocAws.Exporter, error) {
 	if cfg.Exporters.Xray == nil {
 		return nil, errors.New("xray exporter disabled")
 	}
