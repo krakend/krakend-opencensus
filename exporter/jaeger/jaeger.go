@@ -16,14 +16,16 @@ func init() {
 	})
 }
 
-func getProcessTags(cfg *opencensus.Config) []jaeger.Tag {
+func getProcessTags(cfg *opencensus.Config) ([]jaeger.Tag, error) {
 	if cfg.Exporters.Jaeger.ProcessTags == nil {
-		return nil
+		return nil, nil
 	}
+
 	tags := make([]jaeger.Tag, 0, len(cfg.Exporters.Jaeger.ProcessTags))
+
 	for key, value := range cfg.Exporters.Jaeger.ProcessTags {
 		if value == nil {
-			panic(fmt.Sprintf("jaeger process tag '%s' is nil", key))
+			return nil, fmt.Errorf("jaeger process tag '%s' is nil", key)
 		}
 		switch v := value.(type) {
 		case bool:
@@ -33,10 +35,10 @@ func getProcessTags(cfg *opencensus.Config) []jaeger.Tag {
 		case string:
 			tags = append(tags, jaeger.StringTag(key, v))
 		default:
-			panic(fmt.Sprintf("invalid type %s for jaeger process tag %s", reflect.TypeOf(value).String(), key))
+			return nil, fmt.Errorf("invalid type '%s' for jaeger process tag '%s'", reflect.TypeOf(value).String(), key)
 		}
 	}
-	return tags
+	return tags, nil
 }
 
 func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, error) {
@@ -44,7 +46,11 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 		return nil, errDisabled
 	}
 
-	processTags := getProcessTags(&cfg)
+	processTags, err := getProcessTags(&cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	e, err := jaeger.NewExporter(jaeger.Options{
 		AgentEndpoint:     cfg.Exporters.Jaeger.AgentEndpoint,
 		CollectorEndpoint: cfg.Exporters.Jaeger.Endpoint,
@@ -54,7 +60,6 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*jaeger.Exporter, err
 			Tags:        processTags,
 		},
 	})
-
 	if err != nil {
 		return e, err
 	}
