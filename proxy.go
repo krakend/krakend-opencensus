@@ -1,7 +1,7 @@
 package opencensus
 
 import (
-	"context"
+	"net/http"
 
 	"github.com/luraproject/lura/v2/config"
 	"github.com/luraproject/lura/v2/proxy"
@@ -21,10 +21,11 @@ func Middleware(name string) proxy.Middleware {
 		if len(next) < 1 {
 			panic(proxy.ErrNotEnoughProxies)
 		}
-		return func(ctx context.Context, req *proxy.Request) (*proxy.Response, error) {
+		return func(req *http.Request) (*http.Response, error) {
+			ctx := req.Context()
 			var span *trace.Span
 			ctx, span = trace.StartSpan(trace.NewContext(ctx, fromContext(ctx)), name)
-			resp, err := next[0](ctx, req)
+			resp, err := next[0](req)
 			if err != nil {
 				if err.Error() != errCtxCanceledMsg {
 					span.AddAttributes(trace.StringAttribute("error", err.Error()))
@@ -32,7 +33,6 @@ func Middleware(name string) proxy.Middleware {
 					span.AddAttributes(trace.BoolAttribute("canceled", true))
 				}
 			}
-			span.AddAttributes(trace.BoolAttribute("complete", resp != nil && resp.IsComplete))
 			span.End()
 
 			return resp, err
