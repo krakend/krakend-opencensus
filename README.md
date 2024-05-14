@@ -1,19 +1,10 @@
-KrakenD opencensus
+KrakenD OpenCensus (deprecated)
 ====
 
-A set of building blocks for instrumenting [KrakenD](http://www.krakend.io) gateways
+**OpenCensus is no longer maintained**
 
-## Available middlewares
+KrakenD has traditionally offered its telemetry integration through this OpenCensus component, which has provided reliable service for over six years, but now is transitioning to the more modern and robust OpenTelemetry framework.
 
-There are the avaliable middlewares to add to the KrakenD pipes.
+Due to a change in the industry, the original authors no longer maintain the OpenCensus integration, and all efforts are focused on OpenTelemetry.
 
-1. Backend
-2. Proxy
-3. Router
-
-## Available router flavours
-
-1. [mux](github.com/krakendio/krakend-opencensus/blob/master/router/mux) Mux based routers and handlers
-2. [gin](github.com/krakendio/krakend-opencensus/blob/master/router/gin) Gin based routers and handlers
-
-Check the examples and the documentation for more details
+See [krakend-otel](https://github.com/krakend/krakend-otel)
