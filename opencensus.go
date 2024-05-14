@@ -186,10 +186,11 @@ type ZipkinConfig struct {
 }
 
 type JaegerConfig struct {
-	AgentEndpoint  string `json:"agent_endpoint"`
-	Endpoint       string `json:"endpoint"`
-	ServiceName    string `json:"service_name"`
-	BufferMaxCount int    `json:"buffer_max_count"`
+	AgentEndpoint  string                 `json:"agent_endpoint"`
+	Endpoint       string                 `json:"endpoint"`
+	ServiceName    string                 `json:"service_name"`
+	BufferMaxCount int                    `json:"buffer_max_count"`
+	ProcessTags    map[string]interface{} `json:"process_tags"`
 }
 
 type PrometheusConfig struct {
