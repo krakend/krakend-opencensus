@@ -13,9 +13,9 @@ require (
 	contrib.go.opencensus.io/exporter/zipkin v0.0.0-20190424224031-c96617f51dc6
 	github.com/DataDog/opencensus-go-exporter-datadog v0.0.0-20191210083620-6965a1cfed68
 	github.com/aws/aws-sdk-go v1.55.5
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.9.1
 	github.com/kpacha/opencensus-influxdb v0.0.0-20180520162117-1b490a38de4c
-	github.com/luraproject/lura/v2 v2.0.5
+	github.com/luraproject/lura/v2 v2.7.0
 	github.com/openzipkin/zipkin-go v0.1.6
 	github.com/prometheus/client_golang v1.20.2
 	go.opencensus.io v0.24.0
