@@ -113,7 +113,7 @@ func TestNew(t *testing.T) {
 }
 
 func httpHandler(statusCode, respSize int) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(statusCode)
 		body := make([]byte, respSize)
 		w.Write(body)
