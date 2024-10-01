@@ -48,7 +48,7 @@ func TestGetAggregatedPathForMetrics(t *testing.T) {
 		},
 	} {
 		extractor := GetAggregatedPathForMetrics(tc.cfg)
-		r, _ := http.NewRequest("GET", "http://example.tld/api/foo/bar", nil)
+		r, _ := http.NewRequest("GET", "https://example.tld/api/foo/bar", nil)
 		if tag := extractor(r); tag != tc.expected {
 			t.Errorf("tc-%d: unexpected result: %s", i, tag)
 		}
@@ -96,7 +96,7 @@ func TestGetAggregatedPathForBackendMetrics(t *testing.T) {
 		},
 	} {
 		extractor := GetAggregatedPathForBackendMetrics(tc.cfg)
-		r, _ := http.NewRequest("GET", "http://example.tld/api/foo/bar", nil)
+		r, _ := http.NewRequest("GET", "https://example.tld/api/foo/bar", nil)
 		if tag := extractor(r); tag != tc.expected {
 			t.Errorf("tc-%d: unexpected result: %s", i, tag)
 		}

@@ -40,7 +40,7 @@ func TestNew(t *testing.T) {
 	}
 
 	hf := New(func(_ *config.EndpointConfig, _ proxy.Proxy) http.HandlerFunc {
-		return httpHandler(http.StatusOK, rand.Intn(512)+512).ServeHTTP
+		return httpHandler(http.StatusOK, rand.Intn(512)+512).ServeHTTP // skipcq: GSC-G404
 	})
 	h := hf(&config.EndpointConfig{}, proxy.NoopProxy)
 
@@ -49,7 +49,7 @@ func TestNew(t *testing.T) {
 
 	for i := 0; i < totalCount; i++ {
 		w := httptest.NewRecorder()
-		data := make([]byte, rand.Intn(1024))
+		data := make([]byte, rand.Intn(1024)) // skipcq: GSC-G404
 		req, err := http.NewRequest("POST", "/some", bytes.NewBuffer(data))
 		if err != nil {
 			t.Error(err.Error())
@@ -113,7 +113,7 @@ func TestNew(t *testing.T) {
 }
 
 func httpHandler(statusCode, respSize int) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(statusCode)
 		body := make([]byte, respSize)
 		w.Write(body)

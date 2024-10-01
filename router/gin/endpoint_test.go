@@ -41,7 +41,7 @@ func TestNew_post(t *testing.T) {
 	}
 
 	hf := New(func(_ *config.EndpointConfig, _ proxy.Proxy) gin.HandlerFunc {
-		return httpHandlerWithPropagation(http.StatusOK, rand.Intn(512)+512)
+		return httpHandlerWithPropagation(http.StatusOK, rand.Intn(512)+512) // skipcq: GSC-G404
 	})
 
 	gin.SetMode(gin.TestMode)
@@ -53,7 +53,7 @@ func TestNew_post(t *testing.T) {
 
 	for i := 0; i < totalCount; i++ {
 		w := httptest.NewRecorder()
-		data := make([]byte, rand.Intn(1024))
+		data := make([]byte, rand.Intn(1024)) // skipcq: GSC-G404
 		req, err := http.NewRequest("POST", "/post", bytes.NewBuffer(data))
 		req.Header.Set("X-B3-SpanId", "48656c6c6f")
 		req.Header.Set("X-B3-TraceId", "5370616e")
@@ -78,7 +78,7 @@ func TestNew_get(t *testing.T) {
 	}
 
 	hf := New(func(_ *config.EndpointConfig, _ proxy.Proxy) gin.HandlerFunc {
-		return httpHandler(http.StatusOK, rand.Intn(512)+512)
+		return httpHandler(http.StatusOK, rand.Intn(512)+512) // skipcq: GSC-G404
 	})
 
 	gin.SetMode(gin.TestMode)
