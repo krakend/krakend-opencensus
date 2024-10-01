@@ -25,11 +25,11 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 	}
 
 	prometheusRegistry := prom.NewRegistry()
-	err := prometheusRegistry.Register(prom.NewProcessCollector(prom.ProcessCollectorOpts{}))
+	err := prometheusRegistry.Register(prom.NewProcessCollector(prom.ProcessCollectorOpts{})) // skipcq: GO-W1009
 	if err != nil {
 		return nil, err
 	}
-	err = prometheusRegistry.Register(prom.NewGoCollector())
+	err = prometheusRegistry.Register(prom.NewGoCollector()) // skipcq: GO-W1009
 	if err != nil {
 		return nil, err
 	}
