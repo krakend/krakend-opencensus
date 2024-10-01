@@ -42,8 +42,9 @@ func Exporter(ctx context.Context, cfg opencensus.Config) (*prometheus.Exporter,
 	router := http.NewServeMux()
 	router.Handle("/metrics", exporter)
 	server := http.Server{
-		Handler: router,
-		Addr:    fmt.Sprintf(":%d", cfg.Exporters.Prometheus.Port),
+		Handler:           router,
+		Addr:              fmt.Sprintf(":%d", cfg.Exporters.Prometheus.Port),
+		ReadHeaderTimeout: 3 * time.Second,
 	}
 
 	go func() {
