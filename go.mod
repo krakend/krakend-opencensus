@@ -1,9 +1,6 @@
 module github.com/krakendio/krakend-opencensus/v2
 
 go 1.21
-
-toolchain go1.23.0
-
 require (
 	contrib.go.opencensus.io/exporter/aws v0.0.0-20181029163544-2befc13012d0
 	contrib.go.opencensus.io/exporter/jaeger v0.2.1
@@ -67,12 +64,12 @@ require (
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/api v0.114.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
