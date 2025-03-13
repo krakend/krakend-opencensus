@@ -1,6 +1,9 @@
 module github.com/krakendio/krakend-opencensus/v2
 
-go 1.21
+go 1.23.0
+
+toolchain go1.23.6
+
 require (
 	contrib.go.opencensus.io/exporter/aws v0.0.0-20181029163544-2befc13012d0
 	contrib.go.opencensus.io/exporter/jaeger v0.2.1
