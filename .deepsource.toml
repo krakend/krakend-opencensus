@@ -5,7 +5,7 @@ name = "go"
 enabled = true
 
   [analyzers.meta]
-  import_root = "github.com/krakendio/krakend-opencensus"
+  import_root = "github.com/krakend/krakend-opencensus"
 
 [[transformers]]
 name = "gofmt"

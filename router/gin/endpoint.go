@@ -15,7 +15,7 @@ import (
 	"go.opencensus.io/trace"
 	"go.opencensus.io/trace/propagation"
 
-	opencensus "github.com/krakendio/krakend-opencensus/v2"
+	opencensus "github.com/krakend/krakend-opencensus/v2"
 )
 
 // New wraps a handler factory adding some simple instrumentation to the generated handlers

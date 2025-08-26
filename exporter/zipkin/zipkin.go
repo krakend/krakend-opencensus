@@ -6,7 +6,7 @@ import (
 	"net"
 
 	"contrib.go.opencensus.io/exporter/zipkin"
-	opencensus "github.com/krakendio/krakend-opencensus/v2"
+	opencensus "github.com/krakend/krakend-opencensus/v2"
 	"github.com/openzipkin/zipkin-go/model"
 	httpreporter "github.com/openzipkin/zipkin-go/reporter/http"
 )

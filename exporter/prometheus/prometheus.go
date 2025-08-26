@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"contrib.go.opencensus.io/exporter/prometheus"
-	opencensus "github.com/krakendio/krakend-opencensus/v2"
+	opencensus "github.com/krakend/krakend-opencensus/v2"
 	prom "github.com/prometheus/client_golang/prometheus"
 )
 
