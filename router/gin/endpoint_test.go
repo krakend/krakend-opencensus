@@ -90,7 +90,7 @@ func TestNew_get(t *testing.T) {
 
 	for i := 0; i < totalCount; i++ {
 		w := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", "/get", nil)
+		req, err := http.NewRequest("GET", "/get", http.NoBody)
 		if err != nil {
 			t.Error(err.Error())
 			return
